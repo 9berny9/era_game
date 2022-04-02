@@ -3,6 +3,63 @@ import itertools
 # 16 stones with four characteristic
 available_stones = list(itertools.product([0,1], repeat = 4))
 
+class Stone:
+    def __init__(self, characteristic):
+        self.characteristic = characteristic
+
+        if characteristic[3] == 0:
+            self.nameInnerShape = 'Inner Square'
+        else:
+            self.nameInnerShape = 'Inner Circle'
+        if characteristic[2] == 0:
+            self.nameInnerColour = 'Red'
+        else:
+            self.nameInnerColour = 'Blue'
+        if characteristic[1] == 0:
+            self.nameShape = 'Square'
+        else:
+            self.nameShape = 'Circle'
+        if characteristic[0] == 0:
+            self.nameBackground = 'White'
+        else:
+            self.nameBackground = 'Black'
+
+        self.full_name = (self.nameBackground + ' ' + self.nameShape + ' ' + self.nameInnerColour + ' ' + self.nameInnerShape)
+
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.choice = ""
+        self.number_of_wins = 0
+        self.number_of_draws = 0
+
+    def start_player(self):
+        self.choiceStart = input('Which player will be start? ')
+    def choose(self):
+        self.choice = input(f""""{self.name}, select stone number for enemy: """)
+        print(f"""{self.name} selects {self.choice}""")
+
+class GameRound:
+    def __init__(self, p1, p2):
+        p1.choose()
+        p2.choose()
+    def compareChoices(self):
+        print("implement")
+    def awardPoints(self):
+        print("implement")
+
+class Game:
+    def __init__(self):
+        self.endGame = False
+        self.firstPlayer = Player("Spock")
+        self.secondPlayer = Player("Kirk")
+    def start(self):
+        game_round = GameRound(self.firstPlayer, self.secondPlayer)
+
+    def checkEndCondition(self):
+        print("implement")
+    def determineWinner(self):
+        print("implement")
 
 
 def main():
@@ -10,6 +67,12 @@ def main():
     The game running fuction.
     '''
     welcome_and_rules()
+    name_1 = input("First player name: ")
+    name_2 = input("Second player name: ")
+
+    player_1 = Player(name_1)
+    player_2 = Player(name_2)
+
 
 def welcome_and_rules():
     '''
@@ -59,31 +122,16 @@ def number_to_list(number):
         number_choice.append(int(i))
     return number_choice
 
-class Stone:
-    def __init__(self, characteristic):
-        self.characteristic = characteristic
 
-        if characteristic[3] == 0:
-            self.name_inner_shape = 'Inner Square'
-        else:
-            self.name_inner_shape = 'Inner Circle'
-        if characteristic[2] == 0:
-            self.name_inner_colour = 'Red'
-        else:
-            self.name_inner_colour = 'Blue'
-        if characteristic[1] == 0:
-            self.name_shape = 'Square'
-        else:
-            self.name_shape = 'Circle'
-        if characteristic[0] == 0:
-            self.name_background = 'White'
-        else:
-            self.name_background = 'Black'
-
-        self.name = (self.name_background + ' ' + self.name_shape + ' ' + self.name_inner_colour + ' ' + self.name_inner_shape)
+def select_available_stone(available_stones):
+    print('Figurky na výběr: ',available_stones)
+    choice = input('Zde bude jméno hráče, který volí figurku a vloží čtyřmístné číslo z dostupných figurek: ')
+    #if choice in available_stones:
+        #available_stones.
 
 def game_board():
-    game_board = """+----+----+----+----+
+    game_board = """
++----+----+----+----+
 | 11 | 12 | 13 | 14 |
 +----+----+----+----+
 | 21 | 22 | 23 | 24 |

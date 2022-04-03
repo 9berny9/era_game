@@ -2,7 +2,7 @@ import itertools
 
 
 class Stone:
-    def __init__(self,binary_list):
+    def __init__(self, binary_list):
 
         if binary_list[0] == 0:
             self.shape = 0
@@ -24,13 +24,11 @@ class Stone:
         else:
             self.innerColour = 1
 
-
-    def availableStones(self):
+    def allStones(self):
         # all binanry cobinations for stones
         stones_combinations = list(itertools.product([0, 1], repeat=4))
         # convert list with tuples to list with lists
         return [list(i) for i in stones_combinations]
-
 
 class Player:
     def __init__(self):
@@ -68,13 +66,24 @@ class GameRound:
     def __init__(self, p1, p2):
         self.endRound = True
 
+
         p1.choose()
+
+
+    # create new list without using stones
+        # for i in stone.availableStones():
+        #   if i != list1:
+        #     list3.append(i)
+
         p2.put_stone()
         print(p1.movesNumber)
 
         # pridat na hraci pole tah a odebrat figurku z dostupnych
 
         p2.choose()
+
+
+
         p1.put_stone()
 
 

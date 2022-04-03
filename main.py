@@ -33,7 +33,7 @@ class Stone:
     def removeStone(self, player_choice):
         used_stones = []
         for i in self.allStones():
-            if i != player_choice:
+            if i != player_choice and i not in used_stones:
                 used_stones.append(i)
         return used_stones
 
@@ -43,24 +43,25 @@ class Player:
         self.movesNumber = 0
         self.winsNumber = 0
         self.drawsNumber = 0
-        self.allChoices = []
-        self.choiceList = []
-
+        self.allStones = []
+        self.choiceStone = []
 
     def choose(self):
         self.choice = input(f""""{self.name}, select stone number for enemy: """)
         print(f"""{self.name} selects: {self.choice}""")
-        # hold only one choice
-        self.choiceList.clear()
-        # convert string to list
-        for i in self.choice:
-            self.choiceList.append(int(i))
-        # add choice to list with all choices
-        self.allChoices.append(list(self.choiceList))
-        return self.choiceList
 
-    def put_stone(self):
-        self.putStone = input(f""""{self.name}, select field number for your stone: """)
+    def addStoneToPlayer(self, choice):
+        # hold only one choice
+        self.choiceStone.clear()
+        # convert string to list
+        for i in choice:
+            self.choiceStone.append(int(i))
+        # add choice to list with all choices
+        self.allStones.append(list(self.choiceStone))
+        return self.choiceStone
+
+    def putStone(self):
+        self.selectField = input(f""""{self.name}, select field number for your stone: """)
         self.movesNumber += 1
 
 
@@ -73,29 +74,19 @@ class GameRound:
     def __init__(self, p1, p2):
         self.endRound = True
 
-
         p1.choose()
-
-
-    # create new list without using stones
-        # for i in stone.availableStones():
-        #   if i != list1:
-        #     list3.append(i)
-
-        p2.put_stone()
+        p2.addStoneToPlayer(p1.choice)
+        p2.putStone()
+        print(p2.choiceStone)
+        print(p2.allStones)
+        print(p2.movesNumber)
+        p2.choose()
+        p1.addStoneToPlayer(p2.choice)
+        p1.putStone()
+        print(p1.choiceStone)
+        print(p1.allStones)
         print(p1.movesNumber)
 
-        # pridat na hraci pole tah a odebrat figurku z dostupnych
-
-        p2.choose()
-
-
-
-        p1.put_stone()
-
-
-        # pridat na hraci pole tah a odebrat figurku z dostupnych
-        # potom vyhodnotim hraci pole a pokud nikdo nevyhral opakuji tah
 
     def check_columns(board):
         for column in board:
@@ -194,29 +185,8 @@ def separator(delka=45):
     separator = delka * "="
     return separator
 
-def number_to_list(number):
-    number_choice = []
-    for i in str(number):
-        number_choice.append(int(i))
-    return number_choice
 
 
-def select_available_stone(available_stones):
-    print('Figurky na výběr: ',available_stones)
-    choice = input('Zde bude jméno hráče, který volí figurku a vloží čtyřmístné číslo z dostupných figurek: ')
-    #if choice in available_stones:
-        #available_stones.
 
-def game_board():
-    game_board = """
-+----+----+----+----+
-| 11 | 12 | 13 | 14 |
-+----+----+----+----+
-| 21 | 22 | 23 | 24 |
-+----+----+----+----+
-| 31 | 32 | 33 | 34 |
-+----+----+----+----+
-| 41 | 42 | 43 | 44 |
-+----+----+----+----+"""
-    return game_board
+
 

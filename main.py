@@ -38,64 +38,74 @@ class Player:
         self.choice = input(f""""{self.name}, select stone number for enemy: """)
         print(f"""{self.name} selects: {self.choice}""")
 
+
     def put_stone(self):
         self.putStone = input(f""""{self.name}, select field number for your stone: """)
         self.movesNumber += 1
 
 
 
-def main():
-    '''
-    The game running fuction.
-    '''
-    while True:
-        player_1 = Player()
-        player_2 = Player()
-        first_player = int(input("Who will be start? "))
-
-        while True:
-            if first_player == 1:
-                player_1.choose()
-                player_2.put_stone()
-                player_2.choose()
-                player_1.put_stone()
-            else:
-                player_2.choose()
-                player_1.put_stone()
-                player_1.choose()
-                player_2.put_stone()
-
-
-
-
 class GameRound:
     def __init__(self, p1, p2):
+        self.endRound = False
+
         p1.choose()
+        p2.put_stone()
+
+        # pridat na hraci pole tah a odebrat figurku z dostupnych
+
         p2.choose()
-    def compareChoices(self):
-        print("implement")
-    def awardPoints(self):
-        print("implement")
+        p1.put_stone()
+
+        # pridat na hraci pole tah a odebrat figurku z dostupnych
+        # potom vyhodnotim hraci pole a pokud nikdo nevyhral opakuji tah
+
+
+
+    def compareChoice(self, p1, p2):
+        return
+
+
 
 class Game:
     def __init__(self):
         self.endGame = False
-        self.firstPlayer = Player("Spock")
-        self.secondPlayer = Player("Kirk")
+
+        self.firstPlayer = Player()
+        self.secondPlayer = Player()
+
     def start(self):
-        game_round = GameRound(self.firstPlayer, self.secondPlayer)
+        while not self.endGame:
+            GameRound(self.firstPlayer, self.secondPlayer)
+            self.checkEndCondition()
 
     def checkEndCondition(self):
-        print("implement")
+        answer = input("Play next game? y/n: ")
+        if answer == 'y':
+            GameRound(self.firstPlayer, self.secondPlayer)
+            self.checkEndCondition()
+        else:
+            print(
+                "Game ended, {p1name} has {p1wins}, and {p2name} has {p2wins}".format(p1name=self.firstPlayer.name,
+                                                                                          p1wins=self.firstPlayer.winsNumber,
+                                                                                          p2name=self.secondPlayer.name,
+                                                                                          p2wins=self.secondPlayer.winsNumber))
+            self.determineWinner()
+            self.endGame = True
+
     def determineWinner(self):
-        print("implement")
+        resultString = "It's a Draw"
+        if self.firstPlayer.winsNumber > self.secondPlayer.winsNumber:
+            resultString = "Winner is {name}".format(name=self.firstPlayer.name)
+        elif self.firstPlayer.winsNumber < self.secondPlayer.winsNumber:
+            resultString = "Winner is {name}".format(name=self.secondPlayer.name)
+
+        print(resultString)
 
 
 
 
-
-main()
-
+##########################################
 def welcome_and_rules():
     '''
     Function print welcome and rules for two players.

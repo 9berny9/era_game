@@ -32,16 +32,30 @@ class Player:
         self.movesNumber = 0
         self.winsNumber = 0
         self.drawsNumber = 0
+        self.allChoices = []
+        self.choiceList = []
 
 
     def choose(self):
         self.choice = input(f""""{self.name}, select stone number for enemy: """)
         print(f"""{self.name} selects: {self.choice}""")
 
+        self.choiceList.clear()
+
+        for i in self.choice:
+            self.choiceList.append(int(i))
+
+        self.allChoices.append(list(self.choiceList))
+
 
     def put_stone(self):
         self.putStone = input(f""""{self.name}, select field number for your stone: """)
         self.movesNumber += 1
+
+    def available_stones(self):
+        stones_combinations = list(itertools.product([0, 1], repeat=4))
+
+        return [list(i) for i in stones_combinations]
 
 
 
@@ -57,9 +71,9 @@ class GameRound:
         p2.choose()
         p1.put_stone()
 
+
         # pridat na hraci pole tah a odebrat figurku z dostupnych
         # potom vyhodnotim hraci pole a pokud nikdo nevyhral opakuji tah
-
 
 
     def compareChoice(self, p1, p2):

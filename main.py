@@ -2,26 +2,27 @@ import itertools
 
 
 class Stone:
-    def __init__(self):
-        self.characteristic = ''
+    def __init__(self,binary_list):
 
-    def stonesCharacteristic(self, choice_list):
-        if choice_list[3] == 0:
-            self.characteristic = 'Inner Square'
+        if binary_list[0] == 0:
+            self.shape = 0
         else:
-            self.characteristic = 'Inner Circle'
-        if choice_list[2] == 0:
-            self.characteristic = 'Red'
+            self.shape = 1
+
+        if binary_list[1] == 0:
+            self.background = 0
         else:
-            self.characteristic = 'Blue'
-        if choice_list[1] == 0:
-            self.characteristic = 'Square'
+            self.background = 1
+
+        if binary_list[2] == 0:
+            self.innerShape = 0
         else:
-            self.characteristic = 'Circle'
-        if choice_list[0] == 0:
-            self.characteristic = 'White'
+            self.innerShape = 1
+
+        if binary_list[3] == 0:
+            self.innerColour = 0
         else:
-            self.characteristic = 'Black'
+            self.innerColour = 1
 
 
     def availableStones(self):

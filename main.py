@@ -2,8 +2,9 @@ import itertools
 
 
 class Stone:
-    def __init__(self, binary_list):
 
+
+    def stoneClassification(self, binary_list):
         if binary_list[0] == 0:
             self.shape = 0
         else:
@@ -23,21 +24,6 @@ class Stone:
             self.innerColour = 0
         else:
             self.innerColour = 1
-
-    def allStones(self):
-        # all binanry cobinations for stones
-        stones_combinations = list(itertools.product([0, 1], repeat=4))
-        # convert list with tuples to list with lists
-        return [list(i) for i in stones_combinations]
-
-    def removeStone(self, player_choice):
-        used_stones = []
-        for i in self.allStones():
-            if i != player_choice and i not in used_stones:
-                used_stones.append(i)
-        return used_stones
-
-
 
 class Player:
     def __init__(self):
@@ -71,44 +57,43 @@ class GameDesk:
     def __init__(self):
         self.board = [[11, 12, 13, 14], [21, 22, 23, 24],  [31, 32, 33, 34], [41, 42, 43, 44]]
 
+    def stonesCombinations(self):
+        # all binanry cobinations for stones
+        stones_combinations = list(itertools.product([0, 1], repeat=4))
+        # convert list with tuples to list with lists
+        return [list(i) for i in stones_combinations]
+
+
 
 class GameRound:
     def __init__(self, p1, p2):
         self.endRound = True
+        self.roundCounter = 0
+
+        game_desk = GameDesk()
+
+        # show available stones
 
         p1.choose()
         p2.addStoneToPlayer(p1.choice)
-        self.stone = Stone(p2.choiceStone)
-        print(self.stone.innerShape)
-        print(self.stone.background)
-        print(self.stone.shape)
-        print(self.stone.innerColour)
+
+        # show available stones
+
         p2.putStone()
         print(p2.choiceStone)
         print(p2.playerStones)
         print(p2.movesNumber)
 
+
         p2.choose()
         p1.addStoneToPlayer(p2.choice)
-        self.stone = Stone(p1.choiceStone)
+
+        # show available stones
+
         p1.putStone()
         print(p1.choiceStone)
         print(p1.playerStones)
         print(p1.movesNumber)
-
-
-    def check_columns(board):
-        for column in board:
-            if len(set(column)) == 1 and column[0] is not None:
-                return column[0]
-
-    def check_rows(board):
-        return check_columns(zip(*reversed(board)))  # rotate the board 90 degrees
-
-    def compareChoice(self, p1, p2):
-        return
-
-
 
 class Game:
     def __init__(self):
@@ -119,9 +104,7 @@ class Game:
     def start(self):
         while not self.endGame:
             game_round = GameRound(self.firstPlayer, self.secondPlayer)
-            if game_round.endRound is True:
-                continue
-            else:
+            while not game_round.endRound:
                 self.checkEndCondition()
 
     def checkEndCondition(self):
@@ -151,6 +134,23 @@ game = Game()
 game.start()
 
 
+
+####### DOESNT WORK NOW
+
+
+
+
+def check_columns(board):
+    for column in board:
+        if len(set(column)) == 1 and column[0] is not None:
+            return column[0]
+
+def check_rows(board):
+    return check_columns(zip(*reversed(board)))  # rotate the board 90 degrees
+
+def compareChoice(self, p1, p2):
+    return
+######
 ##########################################
 def welcome_and_rules():
     '''

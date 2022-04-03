@@ -47,7 +47,7 @@ class Player:
 
 class GameRound:
     def __init__(self, p1, p2):
-        self.endRound = False
+        self.endRound = True
 
         p1.choose()
         p2.put_stone()
@@ -70,14 +70,16 @@ class GameRound:
 class Game:
     def __init__(self):
         self.endGame = False
-
         self.firstPlayer = Player()
         self.secondPlayer = Player()
 
     def start(self):
         while not self.endGame:
-            GameRound(self.firstPlayer, self.secondPlayer)
-            self.checkEndCondition()
+            game_round = GameRound(self.firstPlayer, self.secondPlayer)
+            if game_round.endRound is True:
+                continue
+            else:
+                self.checkEndCondition()
 
     def checkEndCondition(self):
         answer = input("Play next game? y/n: ")
@@ -102,7 +104,8 @@ class Game:
 
         print(resultString)
 
-
+game = Game()
+game.start()
 
 
 ##########################################

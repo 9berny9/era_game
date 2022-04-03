@@ -37,13 +37,15 @@ class Stone:
                 used_stones.append(i)
         return used_stones
 
+
+
 class Player:
     def __init__(self):
         self.name = input("Your name: ")
         self.movesNumber = 0
         self.winsNumber = 0
         self.drawsNumber = 0
-        self.allStones = []
+        self.playerStones = []
         self.choiceStone = []
 
     def choose(self):
@@ -57,7 +59,7 @@ class Player:
         for i in choice:
             self.choiceStone.append(int(i))
         # add choice to list with all choices
-        self.allStones.append(list(self.choiceStone))
+        self.playerStones.append(list(self.choiceStone))
         return self.choiceStone
 
     def putStone(self):
@@ -76,15 +78,22 @@ class GameRound:
 
         p1.choose()
         p2.addStoneToPlayer(p1.choice)
+        self.stone = Stone(p2.choiceStone)
+        print(self.stone.innerShape)
+        print(self.stone.background)
+        print(self.stone.shape)
+        print(self.stone.innerColour)
         p2.putStone()
         print(p2.choiceStone)
-        print(p2.allStones)
+        print(p2.playerStones)
         print(p2.movesNumber)
+
         p2.choose()
         p1.addStoneToPlayer(p2.choice)
+        self.stone = Stone(p1.choiceStone)
         p1.putStone()
         print(p1.choiceStone)
-        print(p1.allStones)
+        print(p1.playerStones)
         print(p1.movesNumber)
 
 

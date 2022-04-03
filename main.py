@@ -27,17 +27,46 @@ class Stone:
         self.full_name = (self.nameBackground + ' ' + self.nameShape + ' ' + self.nameInnerColour + ' ' + self.nameInnerShape)
 
 class Player:
-    def __init__(self, name):
-        self.name = name
-        self.choice = ""
-        self.number_of_wins = 0
-        self.number_of_draws = 0
+    def __init__(self):
+        self.name = input("Your name: ")
+        self.movesNumber = 0
+        self.winsNumber = 0
+        self.drawsNumber = 0
 
-    def start_player(self):
-        self.choiceStart = input('Which player will be start? ')
+
     def choose(self):
         self.choice = input(f""""{self.name}, select stone number for enemy: """)
-        print(f"""{self.name} selects {self.choice}""")
+        print(f"""{self.name} selects: {self.choice}""")
+
+    def put_stone(self):
+        self.putStone = input(f""""{self.name}, select field number for your stone: """)
+        self.movesNumber += 1
+
+
+
+def main():
+    '''
+    The game running fuction.
+    '''
+    while True:
+        player_1 = Player()
+        player_2 = Player()
+        first_player = int(input("Who will be start? "))
+
+        while True:
+            if first_player == 1:
+                player_1.choose()
+                player_2.put_stone()
+                player_2.choose()
+                player_1.put_stone()
+            else:
+                player_2.choose()
+                player_1.put_stone()
+                player_1.choose()
+                player_2.put_stone()
+
+
+
 
 class GameRound:
     def __init__(self, p1, p2):
@@ -62,17 +91,10 @@ class Game:
         print("implement")
 
 
-def main():
-    '''
-    The game running fuction.
-    '''
-    welcome_and_rules()
-    name_1 = input("First player name: ")
-    name_2 = input("Second player name: ")
 
-    player_1 = Player(name_1)
-    player_2 = Player(name_2)
 
+
+main()
 
 def welcome_and_rules():
     '''

@@ -30,6 +30,13 @@ class Stone:
         # convert list with tuples to list with lists
         return [list(i) for i in stones_combinations]
 
+    def removeStone(self, player_choice):
+        used_stones = []
+        for i in self.allStones():
+            if i != player_choice:
+                used_stones.append(i)
+        return used_stones
+
 class Player:
     def __init__(self):
         self.name = input("Your name: ")

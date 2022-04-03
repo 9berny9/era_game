@@ -1,30 +1,35 @@
 import itertools
 
-# 16 stones with four characteristic
-available_stones = list(itertools.product([0,1], repeat = 4))
 
 class Stone:
-    def __init__(self, characteristic):
-        self.characteristic = characteristic
+    def __init__(self):
+        self.characteristic = ''
 
-        if characteristic[3] == 0:
-            self.nameInnerShape = 'Inner Square'
+    def stonesCharacteristic(self, choice_list):
+        if choice_list[3] == 0:
+            self.characteristic = 'Inner Square'
         else:
-            self.nameInnerShape = 'Inner Circle'
-        if characteristic[2] == 0:
-            self.nameInnerColour = 'Red'
+            self.characteristic = 'Inner Circle'
+        if choice_list[2] == 0:
+            self.characteristic = 'Red'
         else:
-            self.nameInnerColour = 'Blue'
-        if characteristic[1] == 0:
-            self.nameShape = 'Square'
+            self.characteristic = 'Blue'
+        if choice_list[1] == 0:
+            self.characteristic = 'Square'
         else:
-            self.nameShape = 'Circle'
-        if characteristic[0] == 0:
-            self.nameBackground = 'White'
+            self.characteristic = 'Circle'
+        if choice_list[0] == 0:
+            self.characteristic = 'White'
         else:
-            self.nameBackground = 'Black'
+            self.characteristic = 'Black'
 
-        self.full_name = (self.nameBackground + ' ' + self.nameShape + ' ' + self.nameInnerColour + ' ' + self.nameInnerShape)
+
+    def availableStones(self):
+        # all binanry cobinations for stones
+        stones_combinations = list(itertools.product([0, 1], repeat=4))
+        # convert list with tuples to list with lists
+        return [list(i) for i in stones_combinations]
+
 
 class Player:
     def __init__(self):
@@ -39,24 +44,23 @@ class Player:
     def choose(self):
         self.choice = input(f""""{self.name}, select stone number for enemy: """)
         print(f"""{self.name} selects: {self.choice}""")
-
+        # hold only one choice
         self.choiceList.clear()
-
+        # convert string to list
         for i in self.choice:
             self.choiceList.append(int(i))
-
+        # add choice to list with all choices
         self.allChoices.append(list(self.choiceList))
-
+        return self.choiceList
 
     def put_stone(self):
         self.putStone = input(f""""{self.name}, select field number for your stone: """)
         self.movesNumber += 1
 
-    def available_stones(self):
-        stones_combinations = list(itertools.product([0, 1], repeat=4))
 
-        return [list(i) for i in stones_combinations]
-
+class GameDesk:
+    def __init__(self):
+        self.board = [[11, 12, 13, 14], [21, 22, 23, 24],  [31, 32, 33, 34], [41, 42, 43, 44]]
 
 
 class GameRound:
@@ -65,6 +69,7 @@ class GameRound:
 
         p1.choose()
         p2.put_stone()
+        print(p1.movesNumber)
 
         # pridat na hraci pole tah a odebrat figurku z dostupnych
 
@@ -75,6 +80,13 @@ class GameRound:
         # pridat na hraci pole tah a odebrat figurku z dostupnych
         # potom vyhodnotim hraci pole a pokud nikdo nevyhral opakuji tah
 
+    def check_columns(board):
+        for column in board:
+            if len(set(column)) == 1 and column[0] is not None:
+                return column[0]
+
+    def check_rows(board):
+        return check_columns(zip(*reversed(board)))  # rotate the board 90 degrees
 
     def compareChoice(self, p1, p2):
         return

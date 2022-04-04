@@ -33,29 +33,33 @@ class Player:
         self.winsNumber = 0
         self.drawsNumber = 0
         self.choiceList = []
-        self.playerStones = []
+        self.playerFieldsStones = {}
 
     def choose(self):
         self.choice = input(f""""{self.name}, select stone number for enemy: """)
         print(f"""{self.name} selects: {self.choice}""")
         self.choiceList = [int(i) for i in self.choice]
 
-    def stoneAddPlayer(self, stone):
-        self.playerStones.append(stone)
+    def dictFieldStone(self, field, stone):
+        self.playerFieldsStones[field] = stone
 
 
     def putStone(self):
-        self.selectField = input(f""""{self.name}, select field number for your stone: """)
+        self.selectField = int(input(f""""{self.name}, select field number for your stone: """))
+        print(f"""{self.name} selects: {self.selectField}""")
         self.movesNumber += 1
 
-    def getBinaryNumber(self):
-        return [i.binaryNumber for i in self.playerStones]
 
 
 class GameDesk:
 
     def __init__(self):
-        self.board = [[11, 12, 13, 14], [21, 22, 23, 24],  [31, 32, 33, 34], [41, 42, 43, 44]]
+        self.board = [
+            [11, 12, 13, 14],
+            [21, 22, 23, 24],
+            [31, 32, 33, 34],
+            [41, 42, 43, 44]
+        ]
         self.stones = []
         self.makeAllStones()
 
@@ -85,23 +89,28 @@ class GameRound:
 
 
         # show available stones
+        print(desk.board[0])
+        print(desk.board[1])
+        print(desk.board[2])
+        print(desk.board[3])
+        print("")
         print(desk.availableStones())
 
         p1.choose()
         stone = desk.stoneForPlayer(p1.choiceList)
-        p2.stoneAddPlayer(stone)
-        print(p2.getBinaryNumber())
         desk.removeStone(p1.choiceList)
         p2.putStone()
+        p2.dictFieldStone(p2.selectField,stone)
+        print(p2.playerFieldsStones)
 
         print(desk.availableStones())
 
         p2.choose()
         stone = desk.stoneForPlayer(p2.choiceList)
-        p1.stoneAddPlayer(stone)
-        print(p1.getBinaryNumber())
         desk.removeStone(p2.choiceList)
         p1.putStone()
+        p1.dictFieldStone(p1.selectField, stone)
+        print(p1.playerFieldsStones)
 
 
 class Game:

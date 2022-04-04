@@ -34,15 +34,26 @@ class Player:
         self.drawsNumber = 0
         self.playerFieldsStones = {}
 
-    def choose(self):
-        self.choice = input(f""""{self.name}, select stone number for enemy: """)
-        print(f"""{self.name} selects stone: {self.choice}""")
-        self.choiceList = [int(i) for i in self.choice]
 
-    def putStone(self):
-        self.selectField = int(input(f""""{self.name}, select field number for your stone: """))
+    def choose(self,desk_stones):
+        self.choice = input(f""""{self.name}, select a four digit stone number for enemy (example: 0000 or 0001): """)
+        self.choiceList = [int(i) for i in self.choice]
+        while self.choiceList not in desk_stones:
+            self.choice = input(f"""Invalid choice.  {self.name}, choose available stone or format: """)
+            self.choiceList = [int(i) for i in self.choice]
+
+        print(f"""{self.name} selects stone: {self.choice}""")
+        return self.choiceList
+
+
+    def putStone(self, desk_fields):
+        self.selectField = int(input(f""""{self.name}, select field number for your stone (example: 11 or 22): """))
+        while self.selectField not in desk_fields:
+            self.selectField = int(input(f"""Invalid choice.  {self.name}, choose available field or format: """))
+
         print(f"""{self.name} selects field: {self.selectField}""")
         self.movesNumber += 1
+        return self.selectField
 
     def dictFieldStone(self, field, stone):
         self.playerFieldsStones[field] = stone
@@ -98,7 +109,6 @@ class GameRound:
         self.roundCounter = 0
 
 
-        # show available stones
         print("")
         print(desk.board[0])
         print(desk.board[1])
@@ -109,10 +119,10 @@ class GameRound:
         print(desk.fields)
         print("")
 
-        p1.choose()
+        p1.choose(desk.availableStones())
         stone = desk.stoneForPlayer(p1.choiceList)
         desk.removeStone(p1.choiceList)
-        p2.putStone()
+        p2.putStone(desk.fields)
         desk.removeField(p2.selectField)
         p2.dictFieldStone(p2.selectField, stone)
         desk.replaceField(p2.selectField, p1.choice)
@@ -127,11 +137,11 @@ class GameRound:
         print(desk.fields)
         print("")
 
-        p2.choose()
+        p2.choose(desk.availableStones())
         stone = desk.stoneForPlayer(p2.choiceList)
         desk.removeStone(p2.choiceList)
         print(desk.fields)
-        p1.putStone()
+        p1.putStone(desk.fields)
         desk.removeField(p1.selectField)
         p1.dictFieldStone(p1.selectField, stone)
         desk.replaceField(p1.selectField, p2.choice)

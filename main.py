@@ -58,6 +58,7 @@ class GameDesk:
             [' 41 ', ' 42 ', ' 43 ', ' 44 ']
         ]
         self.stones = []
+        self.fields = [11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 43, 44]
         self.makeAllStones()
 
     def stonesCombinations(self):
@@ -76,6 +77,9 @@ class GameDesk:
     def removeStone(self, choice_list):
         self.stones = [i for i in self.stones if i.binaryNumber != choice_list]
 
+    def removeField(self, choice_field):
+        self.fields = [i for i in self.fields if i != choice_field]
+
     def replaceField(self, choice_field, put_stone):
         number = str(choice_field)
         index = int(number[0]) -1
@@ -85,6 +89,8 @@ class GameDesk:
 
     def availableStones(self):
         return [i.binaryNumber for i in self.stones]
+    def availableFields(self):
+        return [i for i in self.fields]
 
 class GameRound:
     def __init__(self, p1, p2, desk):
@@ -100,12 +106,14 @@ class GameRound:
         print(desk.board[3])
         print("")
         print(desk.availableStones())
+        print(desk.fields)
         print("")
 
         p1.choose()
         stone = desk.stoneForPlayer(p1.choiceList)
         desk.removeStone(p1.choiceList)
         p2.putStone()
+        desk.removeField(p2.selectField)
         p2.dictFieldStone(p2.selectField, stone)
         desk.replaceField(p2.selectField, p1.choice)
 
@@ -116,12 +124,15 @@ class GameRound:
         print(desk.board[3])
         print("")
         print(desk.availableStones())
+        print(desk.fields)
         print("")
 
         p2.choose()
         stone = desk.stoneForPlayer(p2.choiceList)
         desk.removeStone(p2.choiceList)
+        print(desk.fields)
         p1.putStone()
+        desk.removeField(p1.selectField)
         p1.dictFieldStone(p1.selectField, stone)
         desk.replaceField(p1.selectField, p2.choice)
 

@@ -76,6 +76,19 @@ class GameDesk:
     def removeStone(self, choice_list):
         self.stones = [i for i in self.stones if i.binaryNumber != choice_list]
 
+    def removeField(self, choice_field):
+        number = str(choice_field)
+        index = int(number[0]) -1
+        index_value = int(number[1]) - 1
+
+        self.board[index][index_value] = choice_field
+
+
+        for i in self.board:
+            for n in i:
+                if n == field:
+                    n.index
+
     def availableStones(self):
         return [i.binaryNumber for i in self.stones]
 

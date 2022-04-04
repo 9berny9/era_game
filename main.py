@@ -2,9 +2,10 @@ import itertools
 
 
 class Stone:
+    def __init__(self,binary_list):
 
+        self.binaryNumber = binary_list
 
-    def stoneClassification(self, binary_list):
         if binary_list[0] == 0:
             self.shape = 0
         else:
@@ -48,14 +49,18 @@ class Player:
         self.playerStones.append(list(self.choiceStone))
         return self.choiceStone
 
+
     def putStone(self):
         self.selectField = input(f""""{self.name}, select field number for your stone: """)
         self.movesNumber += 1
 
 
 class GameDesk:
+
     def __init__(self):
         self.board = [[11, 12, 13, 14], [21, 22, 23, 24],  [31, 32, 33, 34], [41, 42, 43, 44]]
+        self.stones = []
+        self.makeAllStones()
 
     def stonesCombinations(self):
         # all binanry cobinations for stones
@@ -63,47 +68,48 @@ class GameDesk:
         # convert list with tuples to list with lists
         return [list(i) for i in stones_combinations]
 
+    def makeAllStones(self):
+        for i in self.stonesCombinations():
+            self.stones.append(Stone(i))
 
+    def removeStone(self, choice_list):
+        self.stones = [i for i in self.stones if i.binaryNumber != choice_list]
+
+    def availableStones(self):
+        return [i.binaryNumber for i in self.stones]
 
 class GameRound:
-    def __init__(self, p1, p2):
+    def __init__(self, p1, p2, desk):
         self.endRound = True
         self.roundCounter = 0
 
-        game_desk = GameDesk()
 
         # show available stones
-
+        print(desk.availableStones())
         p1.choose()
+
         p2.addStoneToPlayer(p1.choice)
-
-        # show available stones
-
+        desk.removeStone(p2.choiceStone)
         p2.putStone()
-        print(p2.choiceStone)
-        print(p2.playerStones)
-        print(p2.movesNumber)
 
-
+        print(desk.availableStones())
         p2.choose()
+
         p1.addStoneToPlayer(p2.choice)
-
-        # show available stones
-
+        desk.removeStone(p1.choiceStone)
         p1.putStone()
-        print(p1.choiceStone)
-        print(p1.playerStones)
-        print(p1.movesNumber)
+
 
 class Game:
     def __init__(self):
         self.endGame = False
         self.firstPlayer = Player()
         self.secondPlayer = Player()
+        self.gameDesk = GameDesk()
 
     def start(self):
         while not self.endGame:
-            game_round = GameRound(self.firstPlayer, self.secondPlayer)
+            game_round = GameRound(self.firstPlayer, self.secondPlayer, self.gameDesk)
             while not game_round.endRound:
                 self.checkEndCondition()
 

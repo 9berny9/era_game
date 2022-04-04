@@ -52,10 +52,10 @@ class GameDesk:
 
     def __init__(self):
         self.board = [
-            [11, 12, 13, 14],
-            [21, 22, 23, 24],
-            [31, 32, 33, 34],
-            [41, 42, 43, 44]
+            [' 11 ', ' 12 ', ' 13 ', ' 14 '],
+            [' 21 ', ' 22 ', ' 23 ', ' 24 '],
+            [' 31 ', ' 32 ', ' 33 ', ' 34 '],
+            [' 41 ', ' 42 ', ' 43 ', ' 44 ']
         ]
         self.stones = []
         self.makeAllStones()
@@ -82,7 +82,6 @@ class GameDesk:
         index_value = int(number[1]) - 1
 
         self.board[index][index_value] = put_stone
-
 
     def availableStones(self):
         return [i.binaryNumber for i in self.stones]
@@ -111,15 +110,13 @@ class GameRound:
         desk.replaceField(p2.selectField, p1.choice)
 
         print("")
-        print(p2.playerFieldsStones)
-        print("")
         print(desk.board[0])
         print(desk.board[1])
         print(desk.board[2])
         print(desk.board[3])
         print("")
-
         print(desk.availableStones())
+        print("")
 
         p2.choose()
         stone = desk.stoneForPlayer(p2.choiceList)
@@ -127,8 +124,6 @@ class GameRound:
         p1.putStone()
         p1.dictFieldStone(p1.selectField, stone)
         desk.replaceField(p1.selectField, p2.choice)
-        print(p1.playerFieldsStones)
-
 
 class Game:
     def __init__(self):

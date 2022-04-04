@@ -1,26 +1,21 @@
 import itertools
 
-
 class Stone:
     def __init__(self,binary_list):
-
         self.binaryNumber = binary_list
 
         if binary_list[0] == 0:
             self.shape = 0
         else:
             self.shape = 1
-
         if binary_list[1] == 0:
             self.background = 0
         else:
             self.background = 1
-
         if binary_list[2] == 0:
             self.innerShape = 0
         else:
             self.innerShape = 1
-
         if binary_list[3] == 0:
             self.innerColour = 0
         else:
@@ -34,30 +29,37 @@ class Player:
         self.drawsNumber = 0
         self.playerFieldsStones = {}
 
-
     def choose(self,desk_stones):
-        self.choice = input(f""""{self.name}, select a four digit stone number for enemy (example: 0000 or 0001): """)
-        self.choiceList = [int(i) for i in self.choice]
-        while self.choiceList not in desk_stones:
-            self.choice = input(f"""Invalid choice.  {self.name}, choose available stone or format: """)
-            self.choiceList = [int(i) for i in self.choice]
+        while True:
+            try:
+                self.choice = input(f""""{self.name}, select a four digit stone number for enemy (example: 0000 or 0001): """)
+                self.choiceList = [int(i) for i in self.choice]
+                while self.choiceList not in desk_stones:
+                    self.choice = input(f"""Invalid choice.  {self.name}, choose available stone: """)
+                    self.choiceList = [int(i) for i in self.choice]
 
-        print(f"""{self.name} selects stone: {self.choice}""")
-        return self.choiceList
+                print(f"""{self.name} selects stone: {self.choice}""")
+                return self.choiceList
+            except:
+                print("That's not a number!")
 
 
     def putStone(self, desk_fields):
-        self.selectField = int(input(f""""{self.name}, select field number for your stone (example: 11 or 22): """))
-        while self.selectField not in desk_fields:
-            self.selectField = int(input(f"""Invalid choice.  {self.name}, choose available field or format: """))
+        while True:
+            try:
+                self.selectField = int(input(f""""{self.name}, select field number for your stone (example: 11 or 22): """))
+                while self.selectField not in desk_fields:
+                    self.selectField = int(input(f"""Invalid choice.  {self.name}, choose available field: """))
 
-        print(f"""{self.name} selects field: {self.selectField}""")
-        self.movesNumber += 1
-        return self.selectField
+                print(f"""{self.name} selects field: {self.selectField}""")
+                self.movesNumber += 1
+
+                return self.selectField
+            except:
+                print("That's not a number!")
 
     def dictFieldStone(self, field, stone):
         self.playerFieldsStones[field] = stone
-
 
 class GameDesk:
 

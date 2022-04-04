@@ -32,27 +32,24 @@ class Player:
         self.movesNumber = 0
         self.winsNumber = 0
         self.drawsNumber = 0
+        self.choiceList = []
         self.playerStones = []
-        self.choiceStone = []
 
     def choose(self):
         self.choice = input(f""""{self.name}, select stone number for enemy: """)
         print(f"""{self.name} selects: {self.choice}""")
+        self.choiceList = [int(i) for i in self.choice]
 
-    def addStoneToPlayer(self, choice):
-        # hold only one choice
-        self.choiceStone.clear()
-        # convert string to list
-        for i in choice:
-            self.choiceStone.append(int(i))
-        # add choice to list with all choices
-        self.playerStones.append(list(self.choiceStone))
-        return self.choiceStone
+    def stoneAddPlayer(self, stone):
+        self.playerStones.append(stone)
 
 
     def putStone(self):
         self.selectField = input(f""""{self.name}, select field number for your stone: """)
         self.movesNumber += 1
+
+    def getBinaryNumber(self):
+        return [i.binaryNumber for i in self.playerStones]
 
 
 class GameDesk:
@@ -72,6 +69,9 @@ class GameDesk:
         for i in self.stonesCombinations():
             self.stones.append(Stone(i))
 
+    def stoneForPlayer(self, choice_list):
+        return [i for i in self.stones if i.binaryNumber == choice_list][0]
+
     def removeStone(self, choice_list):
         self.stones = [i for i in self.stones if i.binaryNumber != choice_list]
 
@@ -86,17 +86,21 @@ class GameRound:
 
         # show available stones
         print(desk.availableStones())
-        p1.choose()
 
-        p2.addStoneToPlayer(p1.choice)
-        desk.removeStone(p2.choiceStone)
+        p1.choose()
+        stone = desk.stoneForPlayer(p1.choiceList)
+        p2.stoneAddPlayer(stone)
+        print(p2.getBinaryNumber())
+        desk.removeStone(p1.choiceList)
         p2.putStone()
 
         print(desk.availableStones())
-        p2.choose()
 
-        p1.addStoneToPlayer(p2.choice)
-        desk.removeStone(p1.choiceStone)
+        p2.choose()
+        stone = desk.stoneForPlayer(p2.choiceList)
+        p1.stoneAddPlayer(stone)
+        print(p1.getBinaryNumber())
+        desk.removeStone(p2.choiceList)
         p1.putStone()
 
 

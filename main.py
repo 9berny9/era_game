@@ -32,23 +32,20 @@ class Player:
         self.movesNumber = 0
         self.winsNumber = 0
         self.drawsNumber = 0
-        self.choiceList = []
         self.playerFieldsStones = {}
 
     def choose(self):
         self.choice = input(f""""{self.name}, select stone number for enemy: """)
-        print(f"""{self.name} selects: {self.choice}""")
+        print(f"""{self.name} selects stone: {self.choice}""")
         self.choiceList = [int(i) for i in self.choice]
-
-    def dictFieldStone(self, field, stone):
-        self.playerFieldsStones[field] = stone
-
 
     def putStone(self):
         self.selectField = int(input(f""""{self.name}, select field number for your stone: """))
-        print(f"""{self.name} selects: {self.selectField}""")
+        print(f"""{self.name} selects field: {self.selectField}""")
         self.movesNumber += 1
 
+    def dictFieldStone(self, field, stone):
+        self.playerFieldsStones[field] = stone
 
 
 class GameDesk:
@@ -89,19 +86,28 @@ class GameRound:
 
 
         # show available stones
+        print("")
         print(desk.board[0])
         print(desk.board[1])
         print(desk.board[2])
         print(desk.board[3])
         print("")
         print(desk.availableStones())
+        print("")
 
         p1.choose()
         stone = desk.stoneForPlayer(p1.choiceList)
         desk.removeStone(p1.choiceList)
         p2.putStone()
         p2.dictFieldStone(p2.selectField,stone)
+        print("")
         print(p2.playerFieldsStones)
+        print("")
+        print(desk.board[0])
+        print(desk.board[1])
+        print(desk.board[2])
+        print(desk.board[3])
+        print("")
 
         print(desk.availableStones())
 

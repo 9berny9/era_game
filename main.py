@@ -32,7 +32,7 @@ class Player:
     def choose(self,desk_stones):
         while True:
             try:
-                self.choice = input(f""""{self.name}, select a four digit stone number for enemy (example: 0000 or 0001): """)
+                self.choice = input(f""""{self.name}, select a four digit stone number for enemy: """)
                 self.choiceList = [int(i) for i in self.choice]
                 while self.choiceList not in desk_stones:
                     self.choice = input(f"""Invalid choice.  {self.name}, choose available stone: """)
@@ -47,7 +47,7 @@ class Player:
     def putStone(self, desk_fields):
         while True:
             try:
-                self.selectField = int(input(f""""{self.name}, select field number for your stone (example: 11 or 22): """))
+                self.selectField = int(input(f""""{self.name}, select field number for your stone: """))
                 while self.selectField not in desk_fields:
                     self.selectField = int(input(f"""Invalid choice.  {self.name}, choose available field: """))
 
@@ -62,7 +62,6 @@ class Player:
         self.playerFieldsStones[field] = stone
 
 class GameDesk:
-
     def __init__(self):
         self.board = [
             [' 11 ', ' 12 ', ' 13 ', ' 14 '],
@@ -97,7 +96,6 @@ class GameDesk:
         number = str(choice_field)
         index = int(number[0]) -1
         index_value = int(number[1]) - 1
-
         self.board[index][index_value] = put_stone
 
     def availableStones(self):
@@ -110,12 +108,8 @@ class GameRound:
         self.endRound = True
         self.roundCounter = 0
 
-
         print("")
-        print(desk.board[0])
-        print(desk.board[1])
-        print(desk.board[2])
-        print(desk.board[3])
+        [print(i) for i in desk.board]
         print("")
         print(desk.availableStones())
         print(desk.fields)
@@ -130,10 +124,7 @@ class GameRound:
         desk.replaceField(p2.selectField, p1.choice)
 
         print("")
-        print(desk.board[0])
-        print(desk.board[1])
-        print(desk.board[2])
-        print(desk.board[3])
+        [print(i) for i in desk.board]
         print("")
         print(desk.availableStones())
         print(desk.fields)

@@ -1,7 +1,7 @@
 import itertools
 
 class Stone:
-    def __init__(self,binary_list):
+    def __init__(self, binary_list):
         self.binaryNumber = binary_list
 
         if binary_list[0] == 0:
@@ -29,7 +29,7 @@ class Player:
         self.drawsNumber = 0
         self.playerFieldsStones = {}
 
-    def choose(self,desk_stones):
+    def choose(self, desk_stones):
         while True:
             try:
                 self.choice = input(f""""{self.name}, select a four digit stone number for enemy: """)
@@ -60,6 +60,19 @@ class Player:
 
     def dictFieldStone(self, field, stone):
         self.playerFieldsStones[field] = stone
+
+    def replacerComb(self, player_dict):
+        wins_comb = [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41, 42, 43, 44], [11, 21, 31, 41],
+                     [12, 22, 32, 42], [13, 23, 33, 43], [14, 24, 34, 44], [11, 22, 33, 44], [14, 23, 32, 41]]
+        check_all_list = []
+        for i in wins_comb:
+            check_list = []
+            for b in i:
+                if b in player_dict:
+                    check_list.append(player_dict[b])
+            if len(check_list) == 4:
+                check_all_list.append(check_list)
+        return check_all_list
 
 class GameDesk:
     def __init__(self):
@@ -119,9 +132,13 @@ class GameRound:
         stone = desk.stoneForPlayer(p1.choiceList)
         desk.removeStone(p1.choiceList)
         p2.putStone(desk.fields)
+        print(p2.selectField)
         desk.removeField(p2.selectField)
         p2.dictFieldStone(p2.selectField, stone)
+        print(p2.playerFieldsStones)
         desk.replaceField(p2.selectField, p1.choice)
+
+
 
         print("")
         [print(i) for i in desk.board]
@@ -138,6 +155,15 @@ class GameRound:
         desk.removeField(p1.selectField)
         p1.dictFieldStone(p1.selectField, stone)
         desk.replaceField(p1.selectField, p2.choice)
+
+
+
+    def checkWins(self, check_list):
+        for i in check_list:
+            if sum(i) == 0 or sum(i) == 4:
+                print('win')
+            else:
+                print('nic')
 
 class Game:
     def __init__(self):

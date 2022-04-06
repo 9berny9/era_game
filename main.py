@@ -31,7 +31,7 @@ class Player:
         print(self.winsNumber)
     def choose(self, desk_stones):
         while True:
-            if self.name == "Pc" or "Pc1":
+            if self.name == "Pc" or self.name == "Pc1":
                 self.choiceList = random.choice(desk_stones)
                 self.choice = "".join(str(i) for i in self.choiceList)
                 print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
@@ -52,7 +52,7 @@ class Player:
 
     def putStone(self, desk_fields):
         while True:
-            if self.name == "Pc" or "Pc1":
+            if self.name == "Pc" or self.name == "Pc1":
                 self.selectField = random.choice(desk_fields)
                 print(f"""{self.name} placed a stone on the field: {self.selectField}""")
                 return self.selectField
@@ -78,7 +78,7 @@ class Player:
                     print("=" * 60)
                     self.winsNumber += 1
                     return True
-                elif rounds_number == 8:
+                elif rounds_number > 7:
                     [print(i) for i in board]
                     print(f"""This round is a draw!""")
                     return True
@@ -182,8 +182,8 @@ class Game:
         self.gameCounter = 0
         self.gameDesk = GameDesk()
         self.welcome_and_rules()
-        self.firstPlayer = Player(input("First player name: "))
-        self.secondPlayer = Player(input("Second player name: "))
+        self.firstPlayer = Player(input("First player name (for computer player 'pc'): "))
+        self.secondPlayer = Player(input("Second player name (for computer player 'pc1'): "))
 
     def start(self):
         while not self.endGame:

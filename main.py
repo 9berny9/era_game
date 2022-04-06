@@ -1,5 +1,5 @@
 import itertools
-
+from os import system, name
 
 class Stone:
     def __init__(self, binary_list):
@@ -172,9 +172,10 @@ class Game:
     def __init__(self):
         self.endGame = False
         self.gameCounter = 0
+        self.gameDesk = GameDesk()
+        self.welcome_and_rules()
         self.firstPlayer = Player(input("First player name: "))
         self.secondPlayer = Player(input("Second player name: "))
-        self.gameDesk = GameDesk()
 
     def start(self):
         while not self.endGame:
@@ -207,25 +208,40 @@ class Game:
             result_string = f"""Winner is {self.secondPlayer.name}"""
         print(result_string)
 
+    def welcome_and_rules(self):
+        welcome = f"""
+{self.separator(20)}
+WELCOME TO ERA GAME!
+{self.separator(20)}
+ERA Game is turn-based strategy game between two players. 
+There are 16 unique stones with 4 characteristics, which are placed into 4x4 board. 
+All stones are visible to both players. 
+Player, who completes four stones with at least one same characteristic in row, column or diagonal, is winner.
+{self.separator(6)}
+RULES:
+{self.separator(6)}
+Game begins by Player 1 choosing any stone from all 16 free stones. 
+This chosen stone Player 1 gives to Player 2. Player 2 places the stone somewhere on the board.
+Then Player 2 chooses any stone from 15 free stones and gives it to Player 1. Player 1 places stone somewhere on the board.
+Winning row/column/diagonal is row of four stones with at least one same characteristic.
+Both players take turns until all stones are placed or one of them wins.
+{self.separator(12)}
+GAME FIELD:
+{self.separator(12)}
+{self.gameDesk.board[0]}
+{self.gameDesk.board[1]}
+{self.gameDesk.board[2]}
+{self.gameDesk.board[3]}
+"""
+        print(welcome)
+        print(self.separator(46))
+        input("Do you understand? Are you ready? Press enter: ")
+        print(self.separator(46))
 
+    def separator(self, delka=45):
+        separator = delka * "="
+        return separator
 
-
+###### GAME PLAY ######
 game = Game()
 game.start()
-
-
-
-
-
-
-def separator(delka=45):
-    """
-    Description:
-    Function create separator with '=' with length input number
-    Sample:
-    separator(5)
-    Result:
-    =====
-    """
-    separator = delka * "="
-    return separator

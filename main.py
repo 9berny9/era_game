@@ -57,18 +57,19 @@ class Player:
                 print("That's not a number!")
 
 
-    def checkWins(self, player_check_list, rounds_number):
+    def checkWins(self, player_check_list, rounds_number, board):
         for attr in ['shape', 'background', 'innerShape', 'innerColour']:
             for win_stones in [[getattr(j, attr) for j in i] for i in player_check_list]:
                 if sum(win_stones) == 0 or sum(win_stones) == 4:
-                    print(f"""{self.name} wins this round! This stone attribute wins: '{attr}'""")
+                    [print(i) for i in board]
+                    print(f"""{self.name} wins this round! These win stones has attribute: '{attr}'.""")
                     self.winsNumber += 1
                     return True
                 elif rounds_number == 8:
+                    [print(i) for i in board]
                     print(f"""This round is a draw!""")
                     return True
         return False
-
 
 
 class GameDesk:
@@ -154,7 +155,7 @@ class GameRound:
             desk.removeField(p2.selectField)
             desk.dictFieldStone(p2.selectField, desk.choice_stone)
             desk.replaceField(p2.selectField, p1.choice)
-            self.endRound = p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter)
+            self.endRound = p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
 
             desk.deskDescription()
             p2.choose(desk.availableStones())
@@ -165,8 +166,7 @@ class GameRound:
             desk.dictFieldStone(p1.selectField, desk.choice_stone)
             desk.replaceField(p1.selectField, p2.choice)
             self.roundCounter += 1
-            print(self.roundCounter)
-            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter)
+            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
 
 class Game:
     def __init__(self):
@@ -196,7 +196,7 @@ class Game:
 
         else:
             print(
-                "Game ended, {p1name} has {p1wins}, and {p2name} has {p2wins}".format(p1name=self.firstPlayer.name,
+                "Game ended, {p1name} has {p1wins} wins, and {p2name} has {p2wins} wins".format(p1name=self.firstPlayer.name,
                                                                                       p1wins=self.firstPlayer.winsNumber,
                                                                                       p2name=self.secondPlayer.name,
                                                                                       p2wins=self.secondPlayer.winsNumber))

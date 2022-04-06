@@ -89,7 +89,7 @@ class GameDesk:
             self.stones.append(Stone(i))
 
     def stoneForPlayer(self, choice_list):
-        return [i for i in self.stones if i.binaryNumber == choice_list][0]
+        self.choice_stone = [i for i in self.stones if i.binaryNumber == choice_list][0]
 
     def removeStone(self, choice_list):
         self.stones = [i for i in self.stones if i.binaryNumber != choice_list]
@@ -125,48 +125,37 @@ class GameDesk:
                 check_all_list.append(check_list)
         return check_all_list
 
+    def roundDescription(self):
+        print("")
+        [print(i) for i in self.board]
+        print("")
+        print(self.availableStones())
+        print(self.fields)
+        print("")
+
 class GameRound:
     def __init__(self, p1, p2, desk):
         self.endRound = True
         self.roundCounter = 0
 
-        print("")
-        [print(i) for i in desk.board]
-        print("")
-        print(desk.availableStones())
-        print(desk.fields)
-        print("")
-
+        desk.roundDescription()
         p1.choose(desk.availableStones())
-        stone = desk.stoneForPlayer(p1.choiceList)
+        desk.stoneForPlayer(p1.choiceList)
         desk.removeStone(p1.choiceList)
         p2.putStone(desk.fields)
-
-
-        print(p2.selectField)
         desk.removeField(p2.selectField)
-        desk.dictFieldStone(p2.selectField, stone)
-        print(desk.dictFieldsStones)
+        desk.dictFieldStone(p2.selectField, desk.choice_stone)
         desk.replaceField(p2.selectField, p1.choice)
-        print("")
-        [print(i) for i in desk.board]
-
         p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones))
 
-        print("")
-        print(desk.availableStones())
-        print(desk.fields)
-        print("")
-
+        desk.roundDescription()
         p2.choose(desk.availableStones())
-        stone = desk.stoneForPlayer(p2.choiceList)
+        desk.stoneForPlayer(p2.choiceList)
         desk.removeStone(p2.choiceList)
-        print(desk.fields)
         p1.putStone(desk.fields)
         desk.removeField(p1.selectField)
-        desk.dictFieldStone(p1.selectField, stone)
+        desk.dictFieldStone(p1.selectField, desk.choice_stone)
         desk.replaceField(p1.selectField, p2.choice)
-
         p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones))
 
 

@@ -61,14 +61,16 @@ class Player:
         for attr in ['shape', 'background', 'innerShape', 'innerColour']:
             for win_stones in [[getattr(j, attr) for j in i] for i in player_check_list]:
                 if sum(win_stones) == 0 or sum(win_stones) == 4:
+                    print("=" * 32)
                     [print(i) for i in board]
+                    print("=" * 60)
                     print(f"""{self.name} wins this round! These win stones has attribute: '{attr}'.""")
+                    print("=" * 60)
                     self.winsNumber += 1
-                    return True
                 elif rounds_number == 8:
                     [print(i) for i in board]
                     print(f"""This round is a draw!""")
-                    return True
+                return True
         return False
 
 
@@ -133,12 +135,12 @@ class GameDesk:
         return check_all_list
 
     def deskDescription(self):
-        print("")
+        print(game.separator(32))
         [print(i) for i in self.board]
-        print("")
-        print(self.availableStones())
-        print(self.fields)
-        print("")
+        print(game.separator(32))
+        print("Stones available: ", self.availableStones())
+        print("Fields available: ", self.fields)
+        print(game.separator(60))
 
 class GameRound:
     def __init__(self, p1, p2, desk):
@@ -186,6 +188,7 @@ class Game:
         self.gameCounter += 1
         answer = input("Play next game? y/n: ")
         if answer == 'y':
+            print(self.separator(60))
             print('Watch out for the change of starting player')
             self.gameDesk = GameDesk()
             if self.gameCounter % 2 == 0:
@@ -196,8 +199,11 @@ class Game:
             self.checkEndCondition()
 
         else:
+            print(self.separator(60))
             print(f"""Game ended, {self.firstPlayer.name} has {self.firstPlayer.winsNumber} wins, and {self.secondPlayer.name} has {self.secondPlayer.winsNumber} wins""")
             self.determineWinner()
+            print("See you next time!")
+            print(self.separator(60))
             self.endGame = True
 
     def determineWinner(self):

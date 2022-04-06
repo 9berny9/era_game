@@ -28,7 +28,6 @@ class Player:
     def __init__(self, player_name):
         self.name = player_name.capitalize()
         self.winsNumber = 0
-        print(self.winsNumber)
     def choose(self, desk_stones):
         while True:
             if self.name == "Pc" or self.name == "Pc1":
@@ -67,7 +66,7 @@ class Player:
                 except:
                     print("That's not a number!")
 
-    def checkWins(self, player_check_list, rounds_number, board):
+    def checkWins(self, player_check_list, board):
         for attr in ['shape', 'background', 'innerShape', 'innerColour']:
             for win_stones in [[getattr(j, attr) for j in i] for i in player_check_list]:
                 if sum(win_stones) == 0 or sum(win_stones) == 4:
@@ -76,9 +75,8 @@ class Player:
                     print("=" * 60)
                     print(f"""{self.name} wins this round! These win stones has attribute: '{attr}'.""")
                     print("=" * 60)
-                    self.winsNumber += 1
                     return True
-                elif rounds_number > 7:
+                elif len(player_check_list) == 16:
                     [print(i) for i in board]
                     print(f"""This round is a draw!""")
                     return True
@@ -160,9 +158,9 @@ class GameRound:
         self.roundCounter = 0
         while not self.endRound:
             self.move(p1, p2, desk)
-            self.endRound = p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
+            self.endRound = p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
             self.move(p2, p1, desk)
-            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
+            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
             self.roundCounter += 1
 
     def move(self, c1, c2, desk):

@@ -24,11 +24,10 @@ class Stone:
 
 
 class Player:
-    def __init__(self):
-        self.name = input("Your name: ")
-        self.movesNumber = 0
+    def __init__(self, player_name):
+        self.name = player_name
         self.winsNumber = 0
-        self.drawsNumber = 0
+
 
     def choose(self, desk_stones):
         while True:
@@ -52,9 +51,8 @@ class Player:
                     self.selectField = int(input(f"""Invalid choice.  {self.name}, choose available field: """))
 
                 print(f"""{self.name} selects field: {self.selectField}""")
-                self.movesNumber += 1
-
                 return self.selectField
+
             except:
                 print("That's not a number!")
 
@@ -64,6 +62,11 @@ class Player:
             for win_stones in [[getattr(j, attr) for j in i] for i in player_check_list]:
                 if sum(win_stones) == 0 or sum(win_stones) == 4:
                     print(f'''win: {self.name}''', win_stones)
+                    self.winsNumber += 1
+                    return True
+        return False
+
+
 
 class GameDesk:
     def __init__(self):
@@ -125,7 +128,7 @@ class GameDesk:
                 check_all_list.append(check_list)
         return check_all_list
 
-    def roundDescription(self):
+    def deskDescription(self):
         print("")
         [print(i) for i in self.board]
         print("")
@@ -135,48 +138,56 @@ class GameDesk:
 
 class GameRound:
     def __init__(self, p1, p2, desk):
-        self.endRound = True
+        self.endRound = False
         self.roundCounter = 0
 
-        desk.roundDescription()
-        p1.choose(desk.availableStones())
-        desk.stoneForPlayer(p1.choiceList)
-        desk.removeStone(p1.choiceList)
-        p2.putStone(desk.fields)
-        desk.removeField(p2.selectField)
-        desk.dictFieldStone(p2.selectField, desk.choice_stone)
-        desk.replaceField(p2.selectField, p1.choice)
-        p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones))
+        while not self.endRound:
+            desk.deskDescription()
+            p1.choose(desk.availableStones())
+            desk.stoneForPlayer(p1.choiceList)
+            desk.removeStone(p1.choiceList)
+            p2.putStone(desk.fields)
+            desk.removeField(p2.selectField)
+            desk.dictFieldStone(p2.selectField, desk.choice_stone)
+            desk.replaceField(p2.selectField, p1.choice)
+            self.endRound = (p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones)))
 
-        desk.roundDescription()
-        p2.choose(desk.availableStones())
-        desk.stoneForPlayer(p2.choiceList)
-        desk.removeStone(p2.choiceList)
-        p1.putStone(desk.fields)
-        desk.removeField(p1.selectField)
-        desk.dictFieldStone(p1.selectField, desk.choice_stone)
-        desk.replaceField(p1.selectField, p2.choice)
-        p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones))
-
+            desk.deskDescription()
+            p2.choose(desk.availableStones())
+            desk.stoneForPlayer(p2.choiceList)
+            desk.removeStone(p2.choiceList)
+            p1.putStone(desk.fields)
+            desk.removeField(p1.selectField)
+            desk.dictFieldStone(p1.selectField, desk.choice_stone)
+            desk.replaceField(p1.selectField, p2.choice)
+            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones))
 
 class Game:
     def __init__(self):
         self.endGame = False
-        self.firstPlayer = Player()
-        self.secondPlayer = Player()
+        self.gameCounter = 0
+        self.firstPlayer = Player(input("First player name: "))
+        self.secondPlayer = Player(input("Second player name: "))
         self.gameDesk = GameDesk()
 
     def start(self):
         while not self.endGame:
-            game_round = GameRound(self.firstPlayer, self.secondPlayer, self.gameDesk)
-            while not game_round.endRound:
-                self.checkEndCondition()
-
-    def checkEndCondition(self):
-        answer = input("Play next game? y/n: ")
-        if answer == 'y':
             GameRound(self.firstPlayer, self.secondPlayer, self.gameDesk)
             self.checkEndCondition()
+
+    def checkEndCondition(self):
+        self.gameCounter += 1
+        answer = input("Play next game? y/n: ")
+        if answer == 'y':
+            print('Watch out for the change of starting player')
+            self.gameDesk = GameDesk()
+            if self.gameCounter % 2 == 0:
+                GameRound(self.firstPlayer, self.secondPlayer, self.gameDesk)
+            else:
+                GameRound(self.secondPlayer, self.firstPlayer, self.gameDesk)
+
+            self.checkEndCondition()
+
         else:
             print(
                 "Game ended, {p1name} has {p1wins}, and {p2name} has {p2wins}".format(p1name=self.firstPlayer.name,

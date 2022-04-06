@@ -57,12 +57,15 @@ class Player:
                 print("That's not a number!")
 
 
-    def checkWins(self, player_check_list):
+    def checkWins(self, player_check_list, rounds_number):
         for attr in ['shape', 'background', 'innerShape', 'innerColour']:
             for win_stones in [[getattr(j, attr) for j in i] for i in player_check_list]:
                 if sum(win_stones) == 0 or sum(win_stones) == 4:
-                    print(f'''win: {self.name}''', win_stones)
+                    print(f"""{self.name} wins this round! This stone attribute wins: '{attr}'""")
                     self.winsNumber += 1
+                    return True
+                elif rounds_number == 8:
+                    print(f"""This round is a draw!""")
                     return True
         return False
 
@@ -143,6 +146,7 @@ class GameRound:
 
         while not self.endRound:
             desk.deskDescription()
+
             p1.choose(desk.availableStones())
             desk.stoneForPlayer(p1.choiceList)
             desk.removeStone(p1.choiceList)
@@ -150,7 +154,7 @@ class GameRound:
             desk.removeField(p2.selectField)
             desk.dictFieldStone(p2.selectField, desk.choice_stone)
             desk.replaceField(p2.selectField, p1.choice)
-            self.endRound = (p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones)))
+            self.endRound = p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter)
 
             desk.deskDescription()
             p2.choose(desk.availableStones())
@@ -160,7 +164,9 @@ class GameRound:
             desk.removeField(p1.selectField)
             desk.dictFieldStone(p1.selectField, desk.choice_stone)
             desk.replaceField(p1.selectField, p2.choice)
-            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones))
+            self.roundCounter += 1
+            print(self.roundCounter)
+            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter)
 
 class Game:
     def __init__(self):

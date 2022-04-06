@@ -26,15 +26,15 @@ class Stone:
 
 class Player:
     def __init__(self, player_name):
-        self.name = player_name
+        self.name = player_name.capitalize()
         self.winsNumber = 0
-
+        print(self.winsNumber)
     def choose(self, desk_stones):
         while True:
-            if self.name == "pc":
+            if self.name == "Pc" or "Pc1":
                 self.choiceList = random.choice(desk_stones)
                 self.choice = "".join(str(i) for i in self.choiceList)
-                print(f"""{self.name} selects stone {self.choice} for enemy.""")
+                print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
                 return self.choiceList
             else:
                 try:
@@ -44,7 +44,7 @@ class Player:
                         self.choice = input(f"""Invalid choice.  {self.name}, choose available stone: """)
                         self.choiceList = [int(i) for i in self.choice]
 
-                    print(f"""{self.name} selects stone {self.choice} for enemy.""")
+                    print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
                     return self.choiceList
                 except:
                     print("That's not a number!")
@@ -52,9 +52,10 @@ class Player:
 
     def putStone(self, desk_fields):
         while True:
-            if self.name == "pc":
+            if self.name == "Pc" or "Pc1":
                 self.selectField = random.choice(desk_fields)
                 print(f"""{self.name} placed a stone on the field: {self.selectField}""")
+                return self.selectField
             else:
                 try:
                     self.selectField = int(input(f""""{self.name}, select field number for your stone: """))
@@ -62,9 +63,9 @@ class Player:
                         self.selectField = int(input(f"""Invalid choice.  {self.name}, choose available field: """))
 
                     print(f"""{self.name} placed a stone on the field: {self.selectField}""")
+                    return self.selectField
                 except:
                     print("That's not a number!")
-            return self.selectField
 
     def checkWins(self, player_check_list, rounds_number, board):
         for attr in ['shape', 'background', 'innerShape', 'innerColour']:
@@ -76,10 +77,11 @@ class Player:
                     print(f"""{self.name} wins this round! These win stones has attribute: '{attr}'.""")
                     print("=" * 60)
                     self.winsNumber += 1
+                    return True
                 elif rounds_number == 8:
                     [print(i) for i in board]
                     print(f"""This round is a draw!""")
-                return True
+                    return True
         return False
 
 
@@ -158,9 +160,10 @@ class GameRound:
         self.roundCounter = 0
         while not self.endRound:
             self.move(p1, p2, desk)
+            self.endRound = p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
             self.move(p2, p1, desk)
+            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
             self.roundCounter += 1
-            print(self.roundCounter)
 
     def move(self, c1, c2, desk):
         desk.deskDescription()
@@ -171,7 +174,6 @@ class GameRound:
         desk.removeField(c2.selectField)
         desk.dictFieldStone(c2.selectField, desk.choice_stone)
         desk.replaceField(c2.selectField, c1.choice)
-        self.endRound = c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
 
 
 class Game:

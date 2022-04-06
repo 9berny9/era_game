@@ -146,29 +146,21 @@ class GameRound:
     def __init__(self, p1, p2, desk):
         self.endRound = False
         self.roundCounter = 0
-
         while not self.endRound:
-            desk.deskDescription()
-
-            p1.choose(desk.availableStones())
-            desk.stoneForPlayer(p1.choiceList)
-            desk.removeStone(p1.choiceList)
-            p2.putStone(desk.fields)
-            desk.removeField(p2.selectField)
-            desk.dictFieldStone(p2.selectField, desk.choice_stone)
-            desk.replaceField(p2.selectField, p1.choice)
-            self.endRound = p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
-
-            desk.deskDescription()
-            p2.choose(desk.availableStones())
-            desk.stoneForPlayer(p2.choiceList)
-            desk.removeStone(p2.choiceList)
-            p1.putStone(desk.fields)
-            desk.removeField(p1.selectField)
-            desk.dictFieldStone(p1.selectField, desk.choice_stone)
-            desk.replaceField(p1.selectField, p2.choice)
+            self.move(p1, p2, desk)
+            self.move(p2, p1, desk)
             self.roundCounter += 1
-            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
+
+    def move(self, p1, p2, desk):
+        desk.deskDescription()
+        p1.choose(desk.availableStones())
+        desk.stoneForPlayer(p1.choiceList)
+        desk.removeStone(p1.choiceList)
+        p2.putStone(desk.fields)
+        desk.removeField(p2.selectField)
+        desk.dictFieldStone(p2.selectField, desk.choice_stone)
+        desk.replaceField(p2.selectField, p1.choice)
+        self.endRound = p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), self.roundCounter, desk.board)
 
 class Game:
     def __init__(self):

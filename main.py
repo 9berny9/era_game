@@ -26,11 +26,12 @@ class Stone:
 
 class Player:
     def __init__(self, player_name):
-        self.name = player_name.capitalize()
+        self.name = player_name
         self.winsNumber = 0
+
     def choose(self, desk_stones):
         while True:
-            if self.name == "Pc" or self.name == "Pc1":
+            if self.name == "pc" or self.name == "pc1":
                 self.choiceList = random.choice(desk_stones)
                 self.choice = "".join(str(i) for i in self.choiceList)
                 print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
@@ -48,10 +49,9 @@ class Player:
                 except:
                     print("That's not a number!")
 
-
     def putStone(self, desk_fields):
         while True:
-            if self.name == "Pc" or self.name == "Pc1":
+            if self.name == "pc" or self.name == "pc1":
                 self.selectField = random.choice(desk_fields)
                 print(f"""{self.name} placed a stone on the field: {self.selectField}""")
                 return self.selectField
@@ -68,19 +68,23 @@ class Player:
 
     def checkWins(self, player_check_list, board):
         for attr in ['shape', 'background', 'innerShape', 'innerColour']:
-            for win_stones in [[getattr(j, attr) for j in i] for i in player_check_list]:
-                if sum(win_stones) == 0 or sum(win_stones) == 4:
+            for a in [[getattr(j, attr) for j in i] for i in player_check_list]:
+                if sum(a) == 0 or sum(a) == 4:
                     print("=" * 32)
                     [print(i) for i in board]
                     print("=" * 60)
                     print(f"""{self.name} wins this round! These win stones has attribute: '{attr}'.""")
                     print("=" * 60)
+                    self.winsNumber += 1
+                    print(self.winsNumber, {self.name})
                     return True
-                elif len(player_check_list) == 16:
-                    [print(i) for i in board]
-                    print(f"""This round is a draw!""")
-                    return True
-        return False
+        if len(player_check_list) == 10:
+            [print(i) for i in board]
+            print(f"""This round is a draw!""")
+            return True
+
+        else:
+            return False
 
 
 class GameDesk:
@@ -158,9 +162,7 @@ class GameRound:
         self.roundCounter = 0
         while not self.endRound:
             self.move(p1, p2, desk)
-            self.endRound = p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
             self.move(p2, p1, desk)
-            self.endRound = p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
             self.roundCounter += 1
 
     def move(self, c1, c2, desk):
@@ -172,6 +174,7 @@ class GameRound:
         desk.removeField(c2.selectField)
         desk.dictFieldStone(c2.selectField, desk.choice_stone)
         desk.replaceField(c2.selectField, c1.choice)
+        self.endRound = c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
 
 
 class Game:

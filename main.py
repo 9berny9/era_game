@@ -1,5 +1,6 @@
 import itertools
 
+
 class Stone:
     def __init__(self, binary_list):
         self.binaryNumber = binary_list
@@ -21,13 +22,13 @@ class Stone:
         else:
             self.innerColour = 1
 
+
 class Player:
     def __init__(self):
         self.name = input("Your name: ")
         self.movesNumber = 0
         self.winsNumber = 0
         self.drawsNumber = 0
-        self.playerFieldsStones = {}
 
     def choose(self, desk_stones):
         while True:
@@ -43,7 +44,6 @@ class Player:
             except:
                 print("That's not a number!")
 
-
     def putStone(self, desk_fields):
         while True:
             try:
@@ -58,21 +58,12 @@ class Player:
             except:
                 print("That's not a number!")
 
-    def dictFieldStone(self, field, stone):
-        self.playerFieldsStones[field] = stone
 
-    def replacerComb(self, player_dict):
-        wins_comb = [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41, 42, 43, 44], [11, 21, 31, 41],
-                     [12, 22, 32, 42], [13, 23, 33, 43], [14, 24, 34, 44], [11, 22, 33, 44], [14, 23, 32, 41]]
-        check_all_list = []
-        for i in wins_comb:
-            check_list = []
-            for b in i:
-                if b in player_dict:
-                    check_list.append(player_dict[b])
-            if len(check_list) == 4:
-                check_all_list.append(check_list)
-        return check_all_list
+    def checkWins(self, player_check_list):
+        for attr in ['shape', 'background', 'innerShape', 'innerColour']:
+            for win_stones in [[getattr(j, attr) for j in i] for i in player_check_list]:
+                if sum(win_stones) == 0 or sum(win_stones) == 4:
+                    print(f'''win: {self.name}''', win_stones)
 
 class GameDesk:
     def __init__(self):
@@ -85,6 +76,7 @@ class GameDesk:
         self.stones = []
         self.fields = [11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 43, 44]
         self.makeAllStones()
+        self.dictFieldsStones = {}
 
     def stonesCombinations(self):
         # all binanry cobinations for stones
@@ -107,14 +99,31 @@ class GameDesk:
 
     def replaceField(self, choice_field, put_stone):
         number = str(choice_field)
-        index = int(number[0]) -1
+        index = int(number[0]) - 1
         index_value = int(number[1]) - 1
         self.board[index][index_value] = put_stone
 
     def availableStones(self):
         return [i.binaryNumber for i in self.stones]
+
     def availableFields(self):
         return [i for i in self.fields]
+
+    def dictFieldStone(self, field, stone):
+        self.dictFieldsStones[field] = stone
+
+    def checkPossibleComb(self, player_dict):
+        wins_comb = [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41, 42, 43, 44], [11, 21, 31, 41],
+                     [12, 22, 32, 42], [13, 23, 33, 43], [14, 24, 34, 44], [11, 22, 33, 44], [14, 23, 32, 41]]
+        check_all_list = []
+        for i in wins_comb:
+            check_list = []
+            for b in i:
+                if b in player_dict:
+                    check_list.append(player_dict[b])
+            if len(check_list) == 4:
+                check_all_list.append(check_list)
+        return check_all_list
 
 class GameRound:
     def __init__(self, p1, p2, desk):
@@ -132,16 +141,18 @@ class GameRound:
         stone = desk.stoneForPlayer(p1.choiceList)
         desk.removeStone(p1.choiceList)
         p2.putStone(desk.fields)
+
+
         print(p2.selectField)
         desk.removeField(p2.selectField)
-        p2.dictFieldStone(p2.selectField, stone)
-        print(p2.playerFieldsStones)
+        desk.dictFieldStone(p2.selectField, stone)
+        print(desk.dictFieldsStones)
         desk.replaceField(p2.selectField, p1.choice)
-
-
-
         print("")
         [print(i) for i in desk.board]
+
+        p2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones))
+
         print("")
         print(desk.availableStones())
         print(desk.fields)
@@ -153,17 +164,11 @@ class GameRound:
         print(desk.fields)
         p1.putStone(desk.fields)
         desk.removeField(p1.selectField)
-        p1.dictFieldStone(p1.selectField, stone)
+        desk.dictFieldStone(p1.selectField, stone)
         desk.replaceField(p1.selectField, p2.choice)
 
+        p1.checkWins(desk.checkPossibleComb(desk.dictFieldsStones))
 
-
-    def checkWins(self, check_list):
-        for i in check_list:
-            if sum(i) == 0 or sum(i) == 4:
-                print('win')
-            else:
-                print('nic')
 
 class Game:
     def __init__(self):
@@ -181,14 +186,14 @@ class Game:
     def checkEndCondition(self):
         answer = input("Play next game? y/n: ")
         if answer == 'y':
-            GameRound(self.firstPlayer, self.secondPlayer)
+            GameRound(self.firstPlayer, self.secondPlayer, self.gameDesk)
             self.checkEndCondition()
         else:
             print(
                 "Game ended, {p1name} has {p1wins}, and {p2name} has {p2wins}".format(p1name=self.firstPlayer.name,
-                                                                                          p1wins=self.firstPlayer.winsNumber,
-                                                                                          p2name=self.secondPlayer.name,
-                                                                                          p2wins=self.secondPlayer.winsNumber))
+                                                                                      p1wins=self.firstPlayer.winsNumber,
+                                                                                      p2name=self.secondPlayer.name,
+                                                                                      p2wins=self.secondPlayer.winsNumber))
             self.determineWinner()
             self.endGame = True
 
@@ -201,28 +206,12 @@ class Game:
 
         print(resultString)
 
+
 game = Game()
 game.start()
 
 
 
-####### DOESNT WORK NOW
-
-
-
-
-def check_columns(board):
-    for column in board:
-        if len(set(column)) == 1 and column[0] is not None:
-            return column[0]
-
-def check_rows(board):
-    return check_columns(zip(*reversed(board)))  # rotate the board 90 degrees
-
-def compareChoice(self, p1, p2):
-    return
-######
-##########################################
 def welcome_and_rules():
     '''
     Function print welcome and rules for two players.
@@ -253,6 +242,7 @@ Let's start the game!
 
     return print(welcome)
 
+
 def separator(delka=45):
     """
     Description:
@@ -264,9 +254,3 @@ def separator(delka=45):
     """
     separator = delka * "="
     return separator
-
-
-
-
-
-

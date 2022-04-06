@@ -202,9 +202,9 @@ class Game:
     def determineWinner(self):
         result_string = "It's a Draw"
         if self.firstPlayer.winsNumber > self.secondPlayer.winsNumber:
-            result_string = "Winner is {name}".format(name=self.firstPlayer.name)
+            result_string = f"""Winner is {self.firstPlayer.name}"""
         elif self.firstPlayer.winsNumber < self.secondPlayer.winsNumber:
-            result_string = "Winner is {name}".format(name=self.secondPlayer.name)
+            result_string = f"""Winner is {self.secondPlayer.name}"""
         print(result_string)
 
 

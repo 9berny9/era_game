@@ -30,41 +30,39 @@ class Player:
         self.winsNumber = 0
 
     def choose(self, desk_stones):
-        while True:
-            if self.name == "pc" or self.name == "pc1":
-                self.choiceList = random.choice(desk_stones)
-                self.choice = "".join(str(i) for i in self.choiceList)
+        if self.name == "pc" or self.name == "pc1":
+            self.choiceList = random.choice(desk_stones)
+            self.choice = "".join(str(i) for i in self.choiceList)
+            print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
+            return self.choiceList
+        else:
+            try:
+                self.choice = input(f""""{self.name}, select a four digit stone number for enemy: """)
+                self.choiceList = [int(i) for i in self.choice]
+                while self.choiceList not in desk_stones:
+                    self.choice = input(f"""Invalid choice.  {self.name}, choose available stone: """)
+                    self.choiceList = [int(i) for i in self.choice]
+
                 print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
                 return self.choiceList
-            else:
-                try:
-                    self.choice = input(f""""{self.name}, select a four digit stone number for enemy: """)
-                    self.choiceList = [int(i) for i in self.choice]
-                    while self.choiceList not in desk_stones:
-                        self.choice = input(f"""Invalid choice.  {self.name}, choose available stone: """)
-                        self.choiceList = [int(i) for i in self.choice]
-
-                    print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
-                    return self.choiceList
-                except:
-                    print("That's not a number!")
+            except:
+                print("That's not a number!")
 
     def putStone(self, desk_fields):
-        while True:
-            if self.name == "pc" or self.name == "pc1":
-                self.selectField = random.choice(desk_fields)
+        if self.name == "pc" or self.name == "pc1":
+            self.selectField = random.choice(desk_fields)
+            print(f"""{self.name} placed a stone on the field: {self.selectField}""")
+            return self.selectField
+        else:
+            try:
+                self.selectField = int(input(f""""{self.name}, select field number for your stone: """))
+                while self.selectField not in desk_fields:
+                    self.selectField = int(input(f"""Invalid choice.  {self.name}, choose available field: """))
+
                 print(f"""{self.name} placed a stone on the field: {self.selectField}""")
                 return self.selectField
-            else:
-                try:
-                    self.selectField = int(input(f""""{self.name}, select field number for your stone: """))
-                    while self.selectField not in desk_fields:
-                        self.selectField = int(input(f"""Invalid choice.  {self.name}, choose available field: """))
-
-                    print(f"""{self.name} placed a stone on the field: {self.selectField}""")
-                    return self.selectField
-                except:
-                    print("That's not a number!")
+            except:
+                print("That's not a number!")
 
     def checkWins(self, player_check_list, board):
         for attr in ['shape', 'background', 'innerShape', 'innerColour']:
@@ -165,21 +163,23 @@ class GameRound:
         self.endRound = False
         self.roundCounter = 0
 
-        self.move(p1, p2, desk)
-        self.move(p2, p1, desk)
-        self.roundCounter += 1
+        while not self.endRound:
+            if self.move(p1, p2, desk) is True:
+                break
+            elif self.move(p2, p1, desk) is True:
+                break
 
     def move(self, c1, c2, desk):
-        while not self.endRound:
-            desk.deskDescription()
-            c1.choose(desk.availableStones())
-            desk.stoneForPlayer(c1.choiceList)
-            desk.removeStone(c1.choiceList)
-            c2.putStone(desk.availableFields())
-            desk.removeField(c2.selectField)
-            desk.dictFieldStone(c2.selectField, desk.choice_stone)
-            desk.replaceField(c2.selectField, c1.choice)
-            self.endRound = c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
+        desk.deskDescription()
+        c1.choose(desk.availableStones())
+        desk.stoneForPlayer(c1.choiceList)
+        desk.removeStone(c1.choiceList)
+        c2.putStone(desk.availableFields())
+        desk.removeField(c2.selectField)
+        desk.dictFieldStone(c2.selectField, desk.choice_stone)
+        desk.replaceField(c2.selectField, c1.choice)
+        self.roundCounter += 1
+        return c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
 
 
 

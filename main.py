@@ -76,15 +76,19 @@ class Player:
                     print(f"""{self.name} wins this round! These win stones has attribute: '{attr}'.""")
                     print("=" * 60)
                     self.winsNumber += 1
-                    print(self.winsNumber, {self.name})
                     return True
+
         if len(player_check_list) == 10:
+            print("=" * 32)
             [print(i) for i in board]
+            print("=" * 32)
             print(f"""This round is a draw!""")
+            print("=" * 32)
             return True
 
         else:
             return False
+
 
 
 class GameDesk:
@@ -160,21 +164,24 @@ class GameRound:
     def __init__(self, p1, p2, desk):
         self.endRound = False
         self.roundCounter = 0
-        while not self.endRound:
-            self.move(p1, p2, desk)
-            self.move(p2, p1, desk)
-            self.roundCounter += 1
+
+        self.move(p1, p2, desk)
+        self.move(p2, p1, desk)
+        self.roundCounter += 1
 
     def move(self, c1, c2, desk):
-        desk.deskDescription()
-        c1.choose(desk.availableStones())
-        desk.stoneForPlayer(c1.choiceList)
-        desk.removeStone(c1.choiceList)
-        c2.putStone(desk.availableFields())
-        desk.removeField(c2.selectField)
-        desk.dictFieldStone(c2.selectField, desk.choice_stone)
-        desk.replaceField(c2.selectField, c1.choice)
-        self.endRound = c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
+        while not self.endRound:
+            desk.deskDescription()
+            c1.choose(desk.availableStones())
+            desk.stoneForPlayer(c1.choiceList)
+            desk.removeStone(c1.choiceList)
+            c2.putStone(desk.availableFields())
+            desk.removeField(c2.selectField)
+            desk.dictFieldStone(c2.selectField, desk.choice_stone)
+            desk.replaceField(c2.selectField, c1.choice)
+            self.endRound = c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
+
+
 
 
 class Game:
@@ -193,6 +200,8 @@ class Game:
 
     def checkEndCondition(self):
         self.gameCounter += 1
+        print(
+            f""" {self.firstPlayer.name}: {self.firstPlayer.winsNumber} wins, {self.secondPlayer.name}: {self.secondPlayer.winsNumber} wins""")
         answer = input("Play next game? y/n: ")
         if answer == 'y':
             print(self.separator(60))

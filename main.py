@@ -185,7 +185,7 @@ class GameDesk:
 
     def checkPossibleComb(self, player_dict):
         """
-        Function returns a list of possible winning combinations.
+        Function returns a list of possible winning combinations from currently played fields.
         """
         wins_comb = [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41, 42, 43, 44], [11, 21, 31, 41],
                      [12, 22, 32, 42], [13, 23, 33, 43], [14, 24, 34, 44], [11, 22, 33, 44], [14, 23, 32, 41]]

@@ -212,16 +212,24 @@ class GameDesk:
 
 
 class GameRound:
+    """
+    The game round has endRound switcher and move for each turn.
+    """
     def __init__(self, p1, p2, desk):
         self.endRound = False
-
+        # switch on/off
         while not self.endRound:
+            # move for player 1
             if self.move(p1, p2, desk) is True:
                 break
+            # move for player 2
             elif self.move(p2, p1, desk) is True:
                 break
 
     def move(self, c1, c2, desk):
+        """
+        Function with other functions which evaluates the results of the move.
+        """
         desk.deskDescription()
         c1.choose(desk.availableStones())
         desk.stoneForPlayer(c1.choiceList)
@@ -234,6 +242,9 @@ class GameRound:
 
 
 class Game:
+    """
+    The game round has endRound switcher and move for each turn.
+    """
     def __init__(self):
         self.endGame = False
         self.gameCounter = 0
@@ -243,14 +254,19 @@ class Game:
         self.secondPlayer = Player(input("Second player name (for computer player 'pc1'): "))
 
     def start(self):
+        """
+        Function checks if the game round is not over and ask for the next game.
+        """
         while not self.endGame:
             GameRound(self.firstPlayer, self.secondPlayer, self.gameDesk)
             self.checkEndCondition()
 
     def checkEndCondition(self):
+        """
+        Function counts the rounds and asks for the next game. Each game starts with a different player.
+        """
         self.gameCounter += 1
-        print(
-            f""" {self.firstPlayer.name}: {self.firstPlayer.winsNumber} wins, {self.secondPlayer.name}: {self.secondPlayer.winsNumber} wins""")
+        print(f""" {self.firstPlayer.name}: {self.firstPlayer.winsNumber} wins, {self.secondPlayer.name}: {self.secondPlayer.winsNumber} wins""")
         answer = input("Play next game? y/n: ")
         if answer == 'y':
             print(self.separator(60))
@@ -265,14 +281,16 @@ class Game:
 
         else:
             print(self.separator(60))
-            print(
-                f"""Game ended, {self.firstPlayer.name} has {self.firstPlayer.winsNumber} wins, and {self.secondPlayer.name} has {self.secondPlayer.winsNumber} wins""")
+            print(f"""Game ended, {self.firstPlayer.name} has {self.firstPlayer.winsNumber} wins, and {self.secondPlayer.name} has {self.secondPlayer.winsNumber} wins""")
             self.determineWinner()
             print("See you next time!")
             print(self.separator(60))
             self.endGame = True
 
     def determineWinner(self):
+        """
+        Function for determine winner or draw.
+        """
         result_string = "It's a Draw"
         if self.firstPlayer.winsNumber > self.secondPlayer.winsNumber:
             result_string = f"""Winner is {self.firstPlayer.name}"""
@@ -281,6 +299,9 @@ class Game:
         print(result_string)
 
     def welcome_and_rules(self):
+        """
+        Function returns description and rules of the game.
+        """
         welcome = f"""
 {self.separator(20)}
 WELCOME TO ERA GAME!

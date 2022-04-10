@@ -3,6 +3,10 @@ import random
 
 
 class Stone:
+    """
+    Each stone has four binary numbers.
+    Each number is a specific characteristic of the stone. (shape, background, innerShape, innerColour)
+    """
     def __init__(self, binary_list):
         self.binaryNumber = binary_list
 
@@ -104,6 +108,9 @@ class Player:
 
 
 class GameDesk:
+    """
+
+    """
     def __init__(self):
         self.board = [
             [' 11 ', ' 12 ', ' 13 ', ' 14 '],

@@ -214,7 +214,6 @@ class GameDesk:
 class GameRound:
     def __init__(self, p1, p2, desk):
         self.endRound = False
-        self.roundCounter = 0
 
         while not self.endRound:
             if self.move(p1, p2, desk) is True:
@@ -231,7 +230,6 @@ class GameRound:
         desk.removeField(c2.selectField)
         desk.dictFieldStone(c2.selectField, desk.selected_stone)
         desk.replaceField(c2.selectField, c1.choice)
-        self.roundCounter += 1
         return c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
 
 

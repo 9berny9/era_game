@@ -30,10 +30,14 @@ class Player:
         self.winsNumber = 0
 
     def choose(self, desk_stones):
+        """
+        Function selects a stone for the second player from the available stones on the board.
+        If the computer is playing, it selects a random stone from available list.
+        """
         if self.name == "pc" or self.name == "pc1":
             self.choiceList = random.choice(desk_stones)
             self.choice = "".join(str(i) for i in self.choiceList)
-            print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
+            print(f"""{self.name} selects stone '{self.choice}' for enemy.""")funkce výběr kamene pro druhého hráče
             return self.choiceList
         else:
             try:
@@ -49,6 +53,10 @@ class Player:
                 print("That's not a number!")
 
     def putStone(self, desk_fields):
+        """
+        Function selects field where the player places the stone.
+        If the computer is playing, it selects a random field from available list.
+        """
         if self.name == "pc" or self.name == "pc1":
             self.selectField = random.choice(desk_fields)
             print(f"""{self.name} placed a stone on the field: {self.selectField}""")
@@ -65,8 +73,15 @@ class Player:
                 print("That's not a number!")
 
     def checkWins(self, player_check_list, board):
+        """
+        Function over winning combinations and sets the object all available characteristics and looks for four of
+        the same. If all winning combinations have already been used, the program will switch to True and print a draw.
+        """
+        # for cycle in characteristics
         for attr in ['shape', 'background', 'innerShape', 'innerColour']:
+            # for cycle which gets a specific attribute of the object
             for a in [[getattr(j, attr) for j in i] for i in player_check_list]:
+                # sum 0 or 4 means four identical characteristics side by side (player wins round)
                 if sum(a) == 0 or sum(a) == 4:
                     print("=" * 32)
                     [print(i) for i in board]
@@ -75,7 +90,7 @@ class Player:
                     print("=" * 60)
                     self.winsNumber += 1
                     return True
-
+        # players played all moves but no winners
         if len(player_check_list) == 10:
             print("=" * 32)
             [print(i) for i in board]
@@ -83,10 +98,9 @@ class Player:
             print(f"""This round is a draw!""")
             print("=" * 32)
             return True
-
+        # no move is victorious, so it continues
         else:
             return False
-
 
 
 class GameDesk:
@@ -180,8 +194,6 @@ class GameRound:
         desk.replaceField(c2.selectField, c1.choice)
         self.roundCounter += 1
         return c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
-
-
 
 
 class Game:

@@ -41,7 +41,7 @@ class Player:
         if self.name == "pc" or self.name == "pc1":
             self.choiceList = random.choice(desk_stones)
             self.choice = "".join(str(i) for i in self.choiceList)
-            print(f"""{self.name} selects stone '{self.choice}' for enemy.""")funkce výběr kamene pro druhého hráče
+            print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
             return self.choiceList
         else:
             try:
@@ -118,46 +118,75 @@ class GameDesk:
             [' 31 ', ' 32 ', ' 33 ', ' 34 '],
             [' 41 ', ' 42 ', ' 43 ', ' 44 ']
         ]
+        self.selected_stone = None
         self.stones = []
         self.fields = [11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 43, 44]
         self.makeAllStones()
         self.dictFieldsStones = {}
 
     def stonesCombinations(self):
-        # all binanry cobinations for stones
+        """
+        Function returns all binary combination for stones in List of List.
+        """
         stones_combinations = list(itertools.product([0, 1], repeat=4))
-        # convert list with tuples to list with lists
         return [list(i) for i in stones_combinations]
 
     def makeAllStones(self):
+        """
+        The function for each binary combination creates a stone and adds it to the GameDesk.
+        """
         for i in self.stonesCombinations():
             self.stones.append(Stone(i))
 
     def stoneForPlayer(self, choice_list):
-        self.choice_stone = [i for i in self.stones if i.binaryNumber == choice_list][0]
+        """
+        Function returns selected stone from the GameDesk.
+        """
+        self.selected_stone = [i for i in self.stones if i.binaryNumber == choice_list][0]
 
     def removeStone(self, choice_list):
+        """
+        Function removes stone from GameDesk.
+        """
         self.stones = [i for i in self.stones if i.binaryNumber != choice_list]
 
     def removeField(self, choice_field):
+        """
+        Function removes field from GameDesk.
+        """
         self.fields = [i for i in self.fields if i != choice_field]
 
     def replaceField(self, choice_field, put_stone):
+        """
+        Function adjusts game board for visualization.
+        """
         number = str(choice_field)
         index = int(number[0]) - 1
         index_value = int(number[1]) - 1
         self.board[index][index_value] = put_stone
 
     def availableStones(self):
+        """
+        Function return stones that are still in game.
+        """
         return [i.binaryNumber for i in self.stones]
 
     def availableFields(self):
+        """
+        Function return fields that are still in game.
+        """
         return [i for i in self.fields]
 
     def dictFieldStone(self, field, stone):
+        """
+        Function creates a dictionary where the key is field and value is stone.
+        """
         self.dictFieldsStones[field] = stone
 
     def checkPossibleComb(self, player_dict):
+        """
+        Function returns a list of possible winning combinations.
+        """
         wins_comb = [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41, 42, 43, 44], [11, 21, 31, 41],
                      [12, 22, 32, 42], [13, 23, 33, 43], [14, 24, 34, 44], [11, 22, 33, 44], [14, 23, 32, 41]]
         check_all_list = []
@@ -171,6 +200,9 @@ class GameDesk:
         return check_all_list
 
     def deskDescription(self):
+        """
+        Function just for printing each round.
+        """
         print(game.separator(32))
         [print(i) for i in self.board]
         print(game.separator(32))
@@ -197,7 +229,7 @@ class GameRound:
         desk.removeStone(c1.choiceList)
         c2.putStone(desk.availableFields())
         desk.removeField(c2.selectField)
-        desk.dictFieldStone(c2.selectField, desk.choice_stone)
+        desk.dictFieldStone(c2.selectField, desk.selected_stone)
         desk.replaceField(c2.selectField, c1.choice)
         self.roundCounter += 1
         return c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)

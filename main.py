@@ -109,7 +109,7 @@ class Player:
 
 class GameDesk:
     """
-
+    The game board has fields and stones that are gradually removed.
     """
     def __init__(self):
         self.board = [

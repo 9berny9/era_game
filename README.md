@@ -1,6 +1,6 @@
-# ERA GAME
+# QUATRO GAME
 ## DESCRIPTION
-ERA Game is turn-based strategy game between two players. 
+QUATRO Game is turn-based strategy game between two players. 
 There are 16 unique stones with 4 characteristics, which are placed into 4x4 board. 
 All stones are visible to both players. 
 Player, who completes four stones with at least one same characteristic in row, column or diagonal, is winner.

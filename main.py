@@ -235,7 +235,7 @@ class GameRound:
     def __init__(self, p1, p2, desk):
         self.endRound = False
         self.countRound = 1
-        self.dictRound = {"players": {p1.name: [{"round": str(self.countRound)}], p2.name: [{}]}}
+        self.dictRound = {"players": {p1.name: [{"round": str(self.countRound)}], p2.name: [{"round": str(self.countRound)}]}}
         # switch on/off
         while not self.endRound:
             # move for player 1

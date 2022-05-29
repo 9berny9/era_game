@@ -1,4 +1,5 @@
 import itertools
+import json
 import random
 
 
@@ -7,6 +8,7 @@ class Stone:
     Each stone has four binary numbers.
     Each number is a specific characteristic of the stone. (shape, background, innerShape, innerColour)
     """
+
     def __init__(self, binary_list):
         self.binaryNumber = binary_list
 
@@ -45,13 +47,16 @@ class Player:
             return self.choiceList
         else:
             try:
-                self.choice = input(f""""{self.name}, select a four digit stone number for enemy: """)
+                self.choice = input(
+                    f""""{self.name}, select a four digit stone number for enemy: """)
                 self.choiceList = [int(i) for i in self.choice]
                 while self.choiceList not in desk_stones:
-                    self.choice = input(f"""Invalid choice.  {self.name}, choose available stone: """)
+                    self.choice = input(
+                        f"""Invalid choice.  {self.name}, choose available stone: """)
                     self.choiceList = [int(i) for i in self.choice]
 
-                print(f"""{self.name} selects stone '{self.choice}' for enemy.""")
+                print(
+                    f"""{self.name} selects stone '{self.choice}' for enemy.""")
                 return self.choiceList
             except:
                 print("That's not a number!")
@@ -63,15 +68,19 @@ class Player:
         """
         if self.name == "pc" or self.name == "pc1":
             self.selectField = random.choice(desk_fields)
-            print(f"""{self.name} placed a stone on the field: {self.selectField}""")
+            print(
+                f"""{self.name} placed a stone on the field: {self.selectField}""")
             return self.selectField
         else:
             try:
-                self.selectField = int(input(f""""{self.name}, select field number for your stone: """))
+                self.selectField = int(input(
+                    f""""{self.name}, select field number for your stone: """))
                 while self.selectField not in desk_fields:
-                    self.selectField = int(input(f"""Invalid choice.  {self.name}, choose available field: """))
+                    self.selectField = int(input(
+                        f"""Invalid choice.  {self.name}, choose available field: """))
 
-                print(f"""{self.name} placed a stone on the field: {self.selectField}""")
+                print(
+                    f"""{self.name} placed a stone on the field: {self.selectField}""")
                 return self.selectField
             except:
                 print("That's not a number!")
@@ -84,13 +93,15 @@ class Player:
         # for cycle in characteristics
         for attr in ['shape', 'background', 'innerShape', 'innerColour']:
             # for cycle which gets a specific attribute of the object
-            for a in [[getattr(j, attr) for j in i] for i in player_check_list]:
+            for a in [[getattr(j, attr) for j in i] for i in
+                      player_check_list]:
                 # sum 0 or 4 means four identical characteristics side by side (player wins round)
                 if sum(a) == 0 or sum(a) == 4:
                     print("=" * 32)
                     [print(i) for i in board]
                     print("=" * 60)
-                    print(f"""{self.name} wins this round! These win stones has attribute: '{attr}'.""")
+                    print(
+                        f"""{self.name} wins this round! These win stones has attribute: '{attr}'.""")
                     print("=" * 60)
                     self.winsNumber += 1
                     return True
@@ -111,6 +122,7 @@ class GameDesk:
     """
     The game board has fields and stones that are gradually removed.
     """
+
     def __init__(self):
         self.board = [
             [' 11 ', ' 12 ', ' 13 ', ' 14 '],
@@ -120,7 +132,8 @@ class GameDesk:
         ]
         self.selected_stone = None
         self.stones = []
-        self.fields = [11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 43, 44]
+        self.fields = [11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42,
+                       43, 44]
         self.makeAllStones()
         self.dictFieldsStones = {}
 
@@ -142,7 +155,8 @@ class GameDesk:
         """
         Function returns selected stone from the GameDesk.
         """
-        self.selected_stone = [i for i in self.stones if i.binaryNumber == choice_list][0]
+        self.selected_stone = \
+        [i for i in self.stones if i.binaryNumber == choice_list][0]
 
     def removeStone(self, choice_list):
         """
@@ -187,8 +201,10 @@ class GameDesk:
         """
         Function returns a list of possible winning combinations from currently played fields.
         """
-        wins_comb = [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41, 42, 43, 44], [11, 21, 31, 41],
-                     [12, 22, 32, 42], [13, 23, 33, 43], [14, 24, 34, 44], [11, 22, 33, 44], [14, 23, 32, 41]]
+        wins_comb = [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34],
+                     [41, 42, 43, 44], [11, 21, 31, 41],
+                     [12, 22, 32, 42], [13, 23, 33, 43], [14, 24, 34, 44],
+                     [11, 22, 33, 44], [14, 23, 32, 41]]
         check_all_list = []
         for i in wins_comb:
             check_list = []
@@ -215,43 +231,79 @@ class GameRound:
     """
     The game round has endRound switcher and move for each turn.
     """
+
     def __init__(self, p1, p2, desk):
         self.endRound = False
+        self.countRound = 1
+        self.dictRound = {"players": {p1.name: [{"round": str(self.countRound)}], p2.name: [{}]}}
         # switch on/off
         while not self.endRound:
             # move for player 1
             if self.move(p1, p2, desk) is True:
+                self.makeFile(self.dictRound)
                 break
             # move for player 2
             elif self.move(p2, p1, desk) is True:
+                self.makeFile(self.dictRound)
                 break
+            else:
+                self.countRound += 1
+                self.dictRound["players"][p1.name].append({"round": str(self.countRound)})
+                self.dictRound["players"][p2.name].append({"round": str(self.countRound)})
 
     def move(self, c1, c2, desk):
         """
         Function with other functions which evaluates the results of the move.
         """
         desk.deskDescription()
-        c1.choose(desk.availableStones())
+        chosen_stone = c1.choose(desk.availableStones())
+        str_stone = "".join(str(e) for e in chosen_stone)
+        self.dictRound["players"][c1.name][self.countRound - 1].update(
+            {"chosen_stone": str_stone})
         desk.stoneForPlayer(c1.choiceList)
         desk.removeStone(c1.choiceList)
-        c2.putStone(desk.availableFields())
+        placing_stone = c2.putStone(desk.availableFields())
+        self.dictRound["players"][c2.name][self.countRound - 1].update(
+            {"stone": str_stone, "field": placing_stone})
         desk.removeField(c2.selectField)
         desk.dictFieldStone(c2.selectField, desk.selected_stone)
         desk.replaceField(c2.selectField, c1.choice)
-        return c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones), desk.board)
+        check = c2.checkWins(desk.checkPossibleComb(desk.dictFieldsStones),
+                             desk.board)
+        if check is False:
+            self.dictRound["players"][c2.name][self.countRound - 1].update(
+                {"status": "playing"})
+            self.dictRound["players"][c2.name][self.countRound - 1].update(
+                {"status": "playing"})
+        else:
+            self.dictRound["players"][c1.name][self.countRound - 1].update(
+                {"status": "losing"})
+            self.dictRound["players"][c2.name][self.countRound - 1].update(
+                {"status": "win"})
+        print(self.dictRound)
+        return check
+
+    def makeFile(self, dict_round):
+        # write to JSON
+        with open("game_output.json", mode="w") as json_file:
+            # metoda 'dump' uloží objektu do souboru
+            json.dump(dict_round, json_file, indent=4, sort_keys=True)
 
 
 class Game:
     """
     The game round has endRound switcher and move for each turn.
     """
+
     def __init__(self):
         self.endGame = False
         self.gameCounter = 0
         self.gameDesk = GameDesk()
         self.welcome_and_rules()
-        self.firstPlayer = Player(input("First player name (for computer player 'pc'): "))
-        self.secondPlayer = Player(input("Second player name (for computer player 'pc1'): "))
+        self.firstPlayer = Player(
+            input("First player name (for computer player 'pc'): "))
+        self.secondPlayer = Player(
+            input("Second player name (for computer player 'pc1'): "))
 
     def start(self):
         """
@@ -266,7 +318,8 @@ class Game:
         Function counts the rounds and asks for the next game. Each game starts with a different player.
         """
         self.gameCounter += 1
-        print(f""" {self.firstPlayer.name}: {self.firstPlayer.winsNumber} wins, {self.secondPlayer.name}: {self.secondPlayer.winsNumber} wins""")
+        print(
+            f""" {self.firstPlayer.name}: {self.firstPlayer.winsNumber} wins, {self.secondPlayer.name}: {self.secondPlayer.winsNumber} wins""")
         answer = input("Play next game? y/n: ")
         if answer == 'y':
             print(self.separator(60))
@@ -281,7 +334,8 @@ class Game:
 
         else:
             print(self.separator(60))
-            print(f"""Game ended, {self.firstPlayer.name} has {self.firstPlayer.winsNumber} wins, and {self.secondPlayer.name} has {self.secondPlayer.winsNumber} wins""")
+            print(
+                f"""Game ended, {self.firstPlayer.name} has {self.firstPlayer.winsNumber} wins, and {self.secondPlayer.name} has {self.secondPlayer.winsNumber} wins""")
             self.determineWinner()
             print("See you next time!")
             print(self.separator(60))

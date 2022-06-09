@@ -358,9 +358,9 @@ class Game:
         """
         welcome = f"""
 {self.separator(20)}
-WELCOME TO ERA GAME!
+WELCOME TO QUARTO GAME!
 {self.separator(20)}
-ERA Game is turn-based strategy game between two players. 
+QUARTO Game is turn-based strategy game between two players. 
 There are 16 unique stones with 4 characteristics, which are placed into 4x4 board. 
 All stones are visible to both players. 
 Player, who completes four stones with at least one same characteristic in row, column or diagonal, is winner.
